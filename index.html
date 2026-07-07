@@ -8,8 +8,12 @@
 <style>
 :root{
   --verde:#006847; --verde-osc:#00563b; --rojo:#ce1126; --oro:#c8a25f;
-  --tinta:#1f2328; --gris:#57606a; --linea:#e3e0d8; --papel:#faf8f3; --blanco:#fff;
+  --tinta:#1f2328; --gris:#57606a; --linea:#e6e2d9; --papel:#fbf9f4; --blanco:#fff;
   --nota:#8a7c5e; --fondo-nota:#f6f1e4;
+  /* acentos: educación (azul cálido) e ideas (ámbar) */
+  --edu:#2f6f9e; --edu-osc:#245a82; --edu-bg:#eef4fa;
+  --idea:#e07a3a; --idea-osc:#c1642a; --idea-bg:#fdf1e7;
+  --verde-cl:#e7f2ec;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Georgia,'Times New Roman',serif;color:var(--tinta);background:var(--papel);line-height:1.65}
@@ -164,6 +168,63 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .chip.tema{border-color:var(--oro);color:#8a6d1f;background:#fdf8ec}
 .chip.tema:hover{background:var(--oro);color:#3a2f14}
 .chip.gris{border-color:var(--linea);color:var(--gris)}
+
+/* Capa educativa — tarjeta "en pocas palabras" */
+.explica{border:1px solid #d6e6f2;border-radius:12px;padding:0;margin:14px 0 6px;overflow:hidden;background:#fff}
+.explica .ex-h{background:var(--edu-bg);padding:10px 16px;font-size:.82rem;font-weight:bold;color:var(--edu-osc);display:flex;align-items:center;gap:8px;border-bottom:1px solid #dfeaf4}
+.explica .ex-b{padding:14px 16px}
+.explica .ex-q{font-size:.74rem;text-transform:uppercase;letter-spacing:.6px;color:var(--edu);font-weight:bold;margin-bottom:3px}
+.explica .ex-simple{font-size:1.02rem;line-height:1.55;color:var(--tinta);margin-bottom:12px}
+.explica .ex-importa{font-size:.92rem;line-height:1.5;color:#3a4650;background:var(--edu-bg);border-radius:8px;padding:10px 12px}
+.explica .ex-terminos{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.explica .ex-terminos .lb{font-size:.74rem;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;margin-right:2px}
+.termino{border-bottom:2px dotted var(--edu);color:var(--edu-osc);cursor:help;font-weight:600}
+.term-pill{background:var(--edu-bg);border:1px solid #d6e6f2;color:var(--edu-osc);border-radius:16px;padding:3px 11px;font-size:.8rem;cursor:pointer}
+.term-pill:hover{background:var(--edu);color:#fff}
+.term-def{display:none;background:#fff;border:1px solid #d6e6f2;border-left:3px solid var(--edu);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:.86rem;color:#37424c;line-height:1.5}
+.term-def.open{display:block}
+.term-def b{color:var(--edu-osc)}
+.ex-pend{padding:14px 16px;font-size:.9rem;color:var(--gris);font-style:italic}
+
+/* Historia de reformas */
+.reformas{margin:14px 0}
+.reformas>summary{cursor:pointer;font-size:.85rem;color:var(--verde-osc);font-weight:bold;padding:8px 0;list-style:none;display:flex;align-items:center;gap:7px}
+.reformas>summary::-webkit-details-marker{display:none}
+.reformas>summary:hover{color:var(--verde)}
+.reftl{border-left:2px solid var(--oro);margin:8px 0 4px 6px;padding-left:14px}
+.reftl .rf{font-size:.82rem;color:var(--gris);margin:5px 0;position:relative}
+.reftl .rf:before{content:"";position:absolute;left:-19px;top:5px;width:8px;height:8px;border-radius:50%;background:var(--oro)}
+.reftl .rf b{color:var(--tinta)}
+
+/* Comunidad / momentum */
+.momento{background:linear-gradient(135deg,var(--idea-bg),#fff);border:1px solid #f0dcc8;border-radius:12px;padding:18px 20px;margin:22px 0}
+.momento h2{color:var(--idea-osc);font-size:1.15rem;margin-bottom:4px}
+.momento p.sub{color:var(--gris);font-size:.88rem;margin-bottom:14px}
+.debatidos{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.debcard{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:14px;display:block;color:var(--tinta);position:relative}
+.debcard:hover{border-color:var(--idea);text-decoration:none;box-shadow:0 4px 14px rgba(224,122,58,.12)}
+.debcard .dnum{font-size:.74rem;font-weight:bold;color:var(--idea-osc);letter-spacing:.4px}
+.debcard .dtema{color:var(--verde-osc);font-weight:bold;margin:3px 0 8px;font-size:.95rem}
+.debcard .dmeta{font-size:.78rem;color:var(--gris);display:flex;gap:12px}
+.debcard .dmeta b{color:var(--tinta)}
+.feed{margin-top:6px}
+.feeditem{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--linea);font-size:.9rem}
+.feeditem:last-child{border-bottom:none}
+.feeditem .fk{flex:none;width:74px;font-size:.72rem;font-weight:bold;text-transform:uppercase;letter-spacing:.4px;padding-top:2px}
+.feeditem .fk.reforma{color:var(--verde)}
+.feeditem .fk.adicion{color:var(--edu)}
+.feeditem .fk.derogacion{color:var(--rojo)}
+.feeditem .fk.interpretacion{color:var(--idea-osc)}
+.feeditem .fbody b{color:var(--verde-osc)}
+.feeditem .fmeta{color:var(--gris);font-size:.78rem;margin-top:2px}
+.invita{background:var(--idea-bg);border:1px dashed var(--idea);border-radius:12px;padding:20px;text-align:center;margin:14px 0}
+.invita h4{color:var(--idea-osc);font-size:1.02rem;margin-bottom:6px}
+.invita p{color:#6b5340;font-size:.9rem;max-width:520px;margin:0 auto 12px}
+.btn.idea{background:var(--idea);color:#fff}
+.btn.idea:hover{background:var(--idea-osc)}
+.prompts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px}
+.prompts .pchip{background:#fff;border:1px solid #f0dcc8;color:var(--idea-osc);border-radius:18px;padding:6px 13px;font-size:.82rem;cursor:pointer}
+.prompts .pchip:hover{background:var(--idea);color:#fff;border-color:var(--idea)}
 </style>
 </head>
 <body>
@@ -207,6 +268,7 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 <script src="textos_b.js"></script>
 <script src="textos_c.js"></script>
 <script src="textos_d.js"></script>
+<script src="explicaciones.js"></script>
 <script src="grafo.js"></script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -289,42 +351,90 @@ function wireSidebar(){
 }
 
 /* ---------- vistas ---------- */
+const KIND_LBL = {reforma:'Reforma', adicion:'Adición', derogacion:'Derogación', interpretacion:'Pregunta'};
 async function vistaInicio(){
   app.innerHTML = `
   <div class="hero">
-    <h1>La primera Constitución <em>del pueblo</em>, construida por la ciudadanía</h1>
-    <p>Lee el texto vigente, discútelo artículo por artículo y presenta propuestas de reforma que juntos podemos llevar ante nuestras y nuestros representantes. Una alternativa democrática, viva y en constante evolución.</p>
-    <a class="btn sans" href="#/constitucion" style="background:var(--oro);color:#3a2f14">Explorar la Constitución</a>
-    <a class="btn sec sans" href="#/propuestas" style="margin-left:8px;background:transparent;color:#fff;border-color:rgba(255,255,255,.6)">Ver propuestas</a>
+    <h1>Entiende tu Constitución. <em>Ayuda a mejorarla.</em></h1>
+    <p>Lee cada artículo explicado en palabras sencillas, descubre cómo se conectan entre sí y comparte tus ideas para mejorarlos. Un espacio ciudadano para aprender y construir, juntos, una Constitución más nuestra.</p>
+    <a class="btn sans" href="#/constitucion" style="background:var(--oro);color:#3a2f14">Explorar y aprender</a>
+    <a class="btn sec sans" href="#/propuestas" style="margin-left:8px;background:transparent;color:#fff;border-color:rgba(255,255,255,.6)">Ver las ideas de la gente</a>
   </div>
   <div class="stats sans" id="stats">
-    <div class="stat"><div class="n">136</div><div class="l">artículos constitucionales</div></div>
-    <div class="stat"><div class="n" id="st-props">…</div><div class="l">propuestas ciudadanas</div></div>
-    <div class="stat"><div class="n" id="st-votos">…</div><div class="l">votos emitidos</div></div>
-    <div class="stat"><div class="n">${META.ultimaReforma.replace('DOF ','')}</div><div class="l">última reforma (DOF)</div></div>
+    <div class="stat"><div class="n">136</div><div class="l">artículos por explorar</div></div>
+    <div class="stat"><div class="n" id="st-props">…</div><div class="l">ideas compartidas</div></div>
+    <div class="stat"><div class="n" id="st-votos">…</div><div class="l">apoyos y votos</div></div>
+    <div class="stat"><div class="n" id="st-part">…</div><div class="l">voces participando</div></div>
   </div>
+
+  <div class="momento sans" id="momento" style="display:none">
+    <h2>🔥 Lo que la comunidad está debatiendo</h2>
+    <p class="sub">Los artículos donde más ideas están surgiendo ahora mismo.</p>
+    <div class="debatidos" id="debatidos"></div>
+    <h2 style="font-size:1.02rem;margin:18px 0 4px;color:var(--verde-osc)">Actividad reciente</h2>
+    <div class="feed" id="feed"></div>
+  </div>
+
+  <div class="invita sans" id="invita" style="display:none">
+    <h4>✨ Sé de las primeras voces</h4>
+    <p>Todavía nadie ha compartido una idea. Elige un artículo que te importe y propón cómo lo mejorarías: así empieza todo.</p>
+    <a class="btn idea sans" href="#/constitucion">Elegir un artículo</a>
+  </div>
+
   <h2 class="secc">¿Cómo funciona?</h2>
   <div class="pasos sans">
-    <div class="paso"><h3>1 · Lee y entiende</h3><p>Consulta el texto vigente de cada artículo, con su historial de reformas, tomado directamente de la fuente oficial de la Cámara de Diputados.</p></div>
-    <div class="paso"><h3>2 · Propón y delibera</h3><p>Presenta propuestas de reforma, adición o derogación sobre cualquier artículo, y comenta y vota las propuestas de otras personas.</p></div>
-    <div class="paso"><h3>3 · Eleva la voz</h3><p>Las propuestas con mayor respaldo se preparan —con acompañamiento de especialistas— para presentarse ante representantes del Congreso de la Unión.</p></div>
+    <div class="paso"><h3>1 · Aprende</h3><p>Cada artículo viene explicado en lenguaje sencillo: qué dice, por qué te importa y sus términos clave. Sin necesidad de ser abogada o abogado.</p></div>
+    <div class="paso"><h3>2 · Imagina y propón</h3><p>Comparte cómo mejorarías cualquier artículo, comenta las ideas de otras personas y afínenlas juntos. Toda voz suma.</p></div>
+    <div class="paso"><h3>3 · Elevamos la voz</h3><p>Las ideas con más respaldo se preparan —con apoyo de especialistas— para llegar, bien fundamentadas, ante el Congreso de la Unión.</p></div>
   </div>
-  <h2 class="secc">Artículos destacados</h2>
+
+  <h2 class="secc">Empieza por aquí</h2>
   <div class="destacados sans">
     ${[1,3,4,6,17,19].map(n=>`<a class="dest" href="#/articulo/${n}">
       <div class="anum">ARTÍCULO ${ordinal(n).toUpperCase()}</div>
       <div class="atem">${esc(TEMAS[n]||'')}</div>
-      <div class="aext">${esc((TEXTOS[n]||'').split('\n')[0].slice(0,180))}…</div>
+      <div class="aext">${esc((window.CPEUM_EXPLICA&&CPEUM_EXPLICA[n]?CPEUM_EXPLICA[n].simple:(TEXTOS[n]||'').split('\n')[0]).slice(0,150))}…</div>
     </a>`).join('')}
   </div>`;
+  cargarComunidad();
+}
+
+async function cargarComunidad(){
   try{
-    const [{count:p},{count:v}] = await Promise.all([
-      db.from('tc_proposals').select('*',{count:'exact',head:true}),
-      db.from('tc_votes').select('*',{count:'exact',head:true})
+    const [{data:props},{count:v},{data:voters}] = await Promise.all([
+      db.from('tc_proposals').select('id,article_id,title,kind,author_name,created_at').order('created_at',{ascending:false}).limit(200),
+      db.from('tc_votes').select('*',{count:'exact',head:true}),
+      db.from('tc_votes').select('voter_key')
     ]);
-    document.getElementById('st-props').textContent = p ?? 0;
-    document.getElementById('st-votos').textContent = v ?? 0;
-  }catch(e){ document.getElementById('st-props').textContent='—'; document.getElementById('st-votos').textContent='—'; }
+    const P = props||[];
+    const setP = document.getElementById('st-props'); if(setP) setP.textContent = P.length;
+    const setV = document.getElementById('st-votos'); if(setV) setV.textContent = v ?? 0;
+    const autores = new Set(P.map(p=>p.author_name)), vk = new Set((voters||[]).map(x=>x.voter_key));
+    const setPart = document.getElementById('st-part'); if(setPart) setPart.textContent = new Set([...autores,...vk]).size || P.length;
+
+    if(!P.length){ const inv=document.getElementById('invita'); if(inv) inv.style.display='block'; return; }
+    const mom=document.getElementById('momento'); if(mom) mom.style.display='block';
+
+    // más debatidos
+    const porArt={}; P.forEach(p=>{ (porArt[p.article_id]=porArt[p.article_id]||[]).push(p); });
+    const top = Object.keys(porArt).map(a=>({a, n:porArt[a].length})).sort((x,y)=>y.n-x.n).slice(0,6);
+    const deb=document.getElementById('debatidos');
+    if(deb) deb.innerHTML = top.map(t=>`<a class="debcard" href="#/articulo/${esc(t.a)}">
+      <div class="dnum">ARTÍCULO ${esc(t.a)}</div>
+      <div class="dtema">${esc(TEMAS[+t.a]||'Artículo '+t.a)}</div>
+      <div class="dmeta"><span><b>${t.n}</b> ${t.n===1?'idea':'ideas'}</span></div>
+    </a>`).join('');
+
+    // actividad reciente
+    const feed=document.getElementById('feed');
+    if(feed) feed.innerHTML = P.slice(0,6).map(p=>`<div class="feeditem">
+      <div class="fk ${esc(p.kind)}">${esc(KIND_LBL[p.kind]||p.kind)}</div>
+      <div><div class="fbody"><b>${esc(p.author_name)}</b> propuso en el <a href="#/articulo/${esc(p.article_id)}">Art. ${esc(p.article_id)}</a>: "${esc(p.title)}"</div>
+      <div class="fmeta">${fmtFecha(p.created_at)}</div></div>
+    </div>`).join('');
+  }catch(e){
+    ['st-props','st-votos','st-part'].forEach(id=>{const el=document.getElementById(id); if(el&&el.textContent==='…') el.textContent='—';});
+  }
 }
 
 function vistaConstitucion(){
@@ -496,6 +606,46 @@ function relacionesHTML(n){
   </div>`;
 }
 
+function explicaHTML(n){
+  const E = window.CPEUM_EXPLICA && CPEUM_EXPLICA[n];
+  if(!E) return `<div class="explica"><div class="ex-h">💡 En pocas palabras</div><div class="ex-pend">La explicación en lenguaje sencillo de este artículo está en camino. Mientras tanto, puedes leer el texto oficial y proponer ideas para mejorarlo.</div></div>`;
+  const terms = (E.terminos||[]).map(t=>`<span class="term-pill" data-term="${esc(t)}">${esc(t)}</span>`).join('');
+  return `<div class="explica">
+    <div class="ex-h">💡 En pocas palabras</div>
+    <div class="ex-b">
+      <div class="ex-q">¿Qué dice?</div>
+      <div class="ex-simple">${esc(E.simple)}</div>
+      <div class="ex-q">¿Por qué te importa?</div>
+      <div class="ex-importa">${esc(E.importa)}</div>
+      ${terms?`<div class="ex-terminos"><span class="lb">Términos clave</span>${terms}</div><div class="term-def" id="term-def"></div>`:''}
+    </div>
+  </div>`;
+}
+function wireTerminos(){
+  const def = document.getElementById('term-def');
+  if(!def) return;
+  const G = window.CPEUM_GLOSARIO || {};
+  document.querySelectorAll('.term-pill').forEach(p=>p.addEventListener('click',()=>{
+    const t = p.dataset.term;
+    if(def.dataset.cur===t && def.classList.contains('open')){ def.classList.remove('open'); def.dataset.cur=''; return; }
+    def.innerHTML = `<b>${esc(t)}:</b> ${esc(G[t]||'Definición no disponible.')}`;
+    def.classList.add('open'); def.dataset.cur=t;
+  }));
+}
+function reformasHTML(n){
+  const txt = TEXTOS[n]; if(!txt) return '';
+  const fechas=new Set();
+  txt.split('\n').forEach(l=>{ if(/DOF|reformad|adicionad|derogad|Fe de erratas/i.test(l)){ (l.match(/\d{2}-\d{2}-\d{4}/g)||[]).forEach(d=>fechas.add(d)); }});
+  const arr=[...fechas]; if(!arr.length) return '';
+  const iso=f=>{const[d,m,y]=f.split('-');return y+m+d;};
+  arr.sort((a,b)=>iso(a)<iso(b)?-1:1);
+  const items=arr.map(f=>`<div class="rf">Reforma publicada en el <b>DOF ${esc(f)}</b></div>`).join('');
+  return `<details class="reformas sans"><summary>📜 Este artículo se ha modificado ${arr.length} ${arr.length===1?'vez':'veces'} — ver su historia</summary>
+    <div class="reftl">${items}</div>
+    <p class="aviso" style="margin-top:6px">Cada fecha es un decreto de reforma publicado en el Diario Oficial de la Federación. Lo que lees arriba es la versión vigente tras todos esos cambios.</p>
+  </details>`;
+}
+
 async function vistaArticulo(n){
   if(n<1||n>136){ location.hash='#/constitucion'; return; }
   const cap = capDe(n), texto = TEXTOS[n];
@@ -508,24 +658,26 @@ async function vistaArticulo(n){
       <a class="btn mini sec sans" href="#/articulo/${n-1}" ${n<=1?'style="visibility:hidden"':''}>← Art. ${n-1}</a>
       <a class="btn mini sec sans" href="#/articulo/${n+1}" ${n>=136?'style="visibility:hidden"':''}>Art. ${n+1} →</a>
     </div>
+    ${explicaHTML(n)}
     <div class="tabs sans">
       <button class="act" data-tab="texto">Texto vigente</button>
-      <button data-tab="props">Propuestas <span class="badge" id="nprops">…</span></button>
+      <button data-tab="props">Debate e ideas <span class="badge" id="nprops">…</span></button>
     </div>
     <div id="tab-texto">
       ${relacionesHTML(n)}
-      ${texto ? `<div class="fuentebox sans">📜 Texto oficial vigente (última reforma ${esc(META.ultimaReforma)}) · Fuente: <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">Cámara de Diputados, Leyes Biblio</a></div>
+      ${texto ? `${reformasHTML(n)}<div class="fuentebox sans">📜 Texto oficial vigente (última reforma ${esc(META.ultimaReforma)}) · Fuente: <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">Cámara de Diputados, Leyes Biblio</a></div>
         <div class="texto">${renderTexto(texto)}</div>`
       : `<div class="pendiente sans"><b>Texto en proceso de sincronización.</b><br>El texto íntegro y vigente de este artículo está disponible en la fuente oficial mientras completamos la incorporación verificada de los 136 artículos.<br><br><a class="btn" href="${META.textoVigentePdf}" target="_blank" rel="noopener">Leer Artículo ${n} en el PDF oficial (Cámara de Diputados)</a></div>
-        <p class="aviso sans">Aun sin el texto en plataforma, ya puedes crear y votar propuestas sobre este artículo en la pestaña «Propuestas».</p>`}
+        <p class="aviso sans">Aun sin el texto en plataforma, ya puedes crear y votar propuestas sobre este artículo en la pestaña «Debate e ideas».</p>`}
     </div>
     <div id="tab-props" style="display:none">
-      <button class="btn sans" id="btn-nueva">＋ Nueva propuesta para el Artículo ${n}</button>
+      <button class="btn idea sans" id="btn-nueva">＋ Propón una mejora al Artículo ${n}</button>
       <div id="zona-form"></div>
       <div id="lista-props" style="margin-top:16px"><div class="spinner">Cargando propuestas…</div></div>
     </div>
   </div></div>`;
   wireSidebar();
+  wireTerminos();
 
   document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('act'));
@@ -540,25 +692,39 @@ async function vistaArticulo(n){
 function formPropuesta(articleId){
   const z = document.getElementById('zona-form');
   if(z.innerHTML){ z.innerHTML=''; return; }
+  const arrancadores = [
+    'Ampliaría este derecho para incluir…',
+    'Aclararía qué significa exactamente…',
+    'Garantizaría que se cumpla, obligando a…',
+    'Me pregunto por qué este artículo no contempla…'
+  ];
   z.innerHTML = `<form class="nueva sans">
+    <div style="font-size:.9rem;color:var(--idea-osc);font-weight:bold;margin-bottom:2px">✨ Tu idea cuenta. No necesitas ser experta o experto.</div>
+    <div style="font-size:.84rem;color:var(--gris);margin-bottom:6px">Empieza con una de estas ideas o escribe la tuya:</div>
+    <div class="prompts" style="justify-content:flex-start;margin-bottom:4px">
+      ${arrancadores.map(a=>`<span class="pchip" data-arr="${esc(a)}">${esc(a)}</span>`).join('')}
+    </div>
     <label>Tu nombre (público)</label><input name="autor" maxlength="60" required value="${esc(nombreGuardado())}" placeholder="Ej. María P., Oaxaca">
-    <label>Tipo de propuesta</label>
-    <select name="kind"><option value="reforma">Reforma (modificar el texto)</option><option value="adicion">Adición (agregar algo nuevo)</option><option value="derogacion">Derogación (eliminar una parte)</option><option value="interpretacion">Pregunta / interpretación</option></select>
-    <label>Título de la propuesta</label><input name="titulo" maxlength="200" minlength="8" required placeholder="Resume tu propuesta en una frase">
-    <label>Exposición de motivos y texto propuesto</label><textarea name="cuerpo" maxlength="8000" minlength="20" required placeholder="¿Qué cambiarías, cómo quedaría el texto y por qué beneficia al país?"></textarea>
-    <div style="margin-top:12px"><button class="btn" type="submit">Publicar propuesta</button></div>
-    <div class="aviso">Al publicar aceptas que tu propuesta sea pública y moderada por la comunidad y el equipo curador.</div>
+    <label>¿Qué tipo de idea es?</label>
+    <select name="kind"><option value="reforma">Reforma — modificar el texto actual</option><option value="adicion">Adición — agregar algo nuevo</option><option value="derogacion">Derogación — quitar una parte</option><option value="interpretacion">Pregunta o duda para debatir</option></select>
+    <label>Tu idea en una frase</label><input name="titulo" maxlength="200" minlength="8" required placeholder="Ej. Reconocer el acceso a internet como derecho">
+    <label>Cuéntanos más: ¿qué cambiarías, cómo quedaría y por qué mejora al país?</label><textarea name="cuerpo" maxlength="8000" minlength="20" required placeholder="No hace falta lenguaje jurídico. Explícalo con tus palabras: el problema que ves, tu propuesta y a quién beneficia."></textarea>
+    <div style="margin-top:12px"><button class="btn idea" type="submit">Compartir mi idea</button></div>
+    <div class="aviso">Al publicar aceptas que tu idea sea pública y sea comentada y afinada por la comunidad y el equipo curador. Sé respetuoso: construimos juntos.</div>
   </form>`;
+  z.querySelectorAll('.pchip').forEach(c=>c.addEventListener('click',()=>{
+    const inp = z.querySelector('[name=titulo]'); inp.value = c.dataset.arr + ' '; inp.focus();
+  }));
   z.querySelector('form').addEventListener('submit', async ev=>{
     ev.preventDefault();
     const f = ev.target, btn = f.querySelector('.btn');
-    btn.disabled = true; btn.textContent = 'Publicando…';
+    btn.disabled = true; btn.textContent = 'Compartiendo…';
     localStorage.setItem('tc_nombre', f.autor.value.trim());
     const { error } = await db.from('tc_proposals').insert({
       article_id: articleId, title: f.titulo.value.trim(), body: f.cuerpo.value.trim(),
       author_name: f.autor.value.trim() || 'Ciudadano/a', kind: f.kind.value
     });
-    if(error){ btn.disabled=false; btn.textContent='Publicar propuesta';
+    if(error){ btn.disabled=false; btn.textContent='Compartir mi idea';
       z.insertAdjacentHTML('beforeend', `<div class="errbox">No se pudo publicar: ${esc(error.message)}</div>`); return; }
     z.innerHTML='';
     const lista = document.getElementById('lista-props');
@@ -572,7 +738,11 @@ async function cargarPropuestas(articleId, cont, badge){
   const { data: props, error } = await q;
   if(error){ cont.innerHTML = `<div class="errbox sans">No se pudieron cargar las propuestas: ${esc(error.message)}</div>`; return; }
   if(badge) badge.textContent = props.length;
-  if(!props.length){ cont.innerHTML = `<div class="vacio sans">Aún no hay propuestas${articleId?' para este artículo':''}. ¡Sé la primera persona en proponer!</div>`; return; }
+  if(!props.length){ cont.innerHTML = `<div class="invita sans">
+    <h4>✨ Este espacio está esperando tu idea</h4>
+    <p>Nadie ha propuesto una mejora${articleId?' para este artículo':''} todavía. Las grandes reformas empiezan con una persona que se anima a decir «¿y si lo hiciéramos mejor?». Esa persona puedes ser tú.</p>
+    ${articleId?`<button class="btn idea sans" onclick="document.getElementById('btn-nueva').click()">Ser la primera voz</button>`:`<a class="btn idea sans" href="#/constitucion">Elegir un artículo para proponer</a>`}
+  </div>`; return; }
 
   const ids = props.map(p=>p.id);
   const [{data:votos},{data:comms}] = await Promise.all([
@@ -623,10 +793,15 @@ async function cargarPropuestas(articleId, cont, badge){
 
 async function vistaPropuestas(){
   app.innerHTML = `<div class="tarjeta">
-    <div class="miga sans">Inicio › Propuestas ciudadanas</div>
-    <h1 class="art-tit">Propuestas ciudadanas</h1>
-    <p class="art-tema">Las ideas del pueblo para mejorar nuestra Carta Magna, ordenadas por respaldo ciudadano.</p>
-    <div id="lista-props" style="margin-top:16px"><div class="spinner">Cargando propuestas…</div></div>
+    <div class="miga sans">Inicio › Ideas ciudadanas</div>
+    <h1 class="art-tit">Ideas de la comunidad</h1>
+    <p class="art-tema">Las ideas del pueblo para mejorar nuestra Constitución, ordenadas por el respaldo que van recibiendo.</p>
+    <div class="invita sans" style="text-align:left;margin:14px 0">
+      <h4 style="margin-bottom:4px">¿Tienes una idea para mejorar la Constitución?</h4>
+      <p style="margin:0 0 10px 0">Elige el artículo que quieras y compártela. No necesitas lenguaje jurídico ni ser experta o experto: solo ganas de aportar.</p>
+      <a class="btn idea sans" href="#/constitucion">Elegir un artículo y proponer</a>
+    </div>
+    <div id="lista-props" style="margin-top:16px"><div class="spinner">Cargando ideas…</div></div>
   </div>`;
   cargarPropuestas(null, document.getElementById('lista-props'), null);
 }
@@ -637,11 +812,11 @@ function vistaAcerca(){
     <h1 class="art-tit">Acerca de tuConstitución.mx</h1>
     <p style="margin:14px 0">tuConstitución.mx es una plataforma ciudadana e independiente que busca acercar la Constitución Política de los Estados Unidos Mexicanos a las personas y darles voz real en su evolución. Creemos que la Carta Magna no debe ser un documento lejano que sólo se reforma desde los órganos del Estado, sino un texto vivo que el pueblo conoce, discute y ayuda a perfeccionar.</p>
     <h2 class="secc">Qué ofrece la plataforma</h2>
-    <p style="margin:12px 0">Una versión navegable del texto constitucional vigente sincronizada desde la fuente oficial; herramientas para proponer reformas, adiciones o derogaciones artículo por artículo; foros de discusión y votación para medir el respaldo ciudadano de cada idea; y un proceso de curaduría con especialistas para que las mejores propuestas lleguen, bien fundamentadas, a las y los representantes del Congreso de la Unión, quienes conservan la facultad constitucional de iniciativa y reforma (artículos 71 y 135).</p>
+    <p style="margin:12px 0">Una versión navegable del texto constitucional vigente sincronizada desde la fuente oficial, con cada artículo explicado en <b>lenguaje sencillo</b> («qué dice» y «por qué te importa») y sus términos clave; un <b>grafo de relaciones</b> que muestra cómo los artículos se conectan entre sí; herramientas para proponer reformas, adiciones o derogaciones artículo por artículo; foros de discusión y votación para medir el respaldo ciudadano de cada idea; y un proceso de curaduría con especialistas para que las mejores propuestas lleguen, bien fundamentadas, a las y los representantes del Congreso de la Unión, quienes conservan la facultad constitucional de iniciativa y reforma (artículos 71 y 135).</p>
     <h2 class="secc">Fuentes y rigor</h2>
     <p style="margin:12px 0">Las reformas constitucionales sólo son oficiales cuando se publican en el <a href="https://www.dof.gob.mx/" target="_blank" rel="noopener">Diario Oficial de la Federación</a>. El texto consolidado vigente que usamos proviene de la <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">Biblioteca de Leyes de la Cámara de Diputados</a> (última reforma: ${esc(META.ultimaReforma)}). Cada artículo enlaza a su fuente, y ningún contenido de esta plataforma sustituye al texto oficial.</p>
     <h2 class="secc">Hoja de ruta</h2>
-    <p style="margin:12px 0">Esta es la versión inicial. Próximamente: sincronización completa y automática de los 136 artículos y transitorios desde la fuente oficial, cuentas verificadas de usuario, curaduría por especialistas en cada materia, asistente de IA para redactar y fundamentar propuestas de reforma, comparador de versiones históricas de cada artículo, y mecanismos para canalizar formalmente las propuestas con mayor respaldo a las y los legisladores.</p>
+    <p style="margin:12px 0">Ya disponibles: explicaciones en lenguaje sencillo, grafo de relaciones entre artículos, y espacio de ideas ciudadanas. Próximamente: explicaciones para los 136 artículos, sincronización completa del texto oficial, cuentas verificadas de usuario, curaduría por especialistas en cada materia, un asistente de IA para responder dudas sobre cada artículo y ayudar a fundamentar propuestas, análisis de impacto de cada idea sobre los artículos relacionados, y mecanismos para canalizar formalmente ante las y los legisladores las propuestas con mayor respaldo.</p>
     <div class="fuentebox sans">¿Quieres sumarte como especialista, moderador o desarrollador? Este proyecto es del pueblo: escríbenos.</div>
   </div>`;
 }
