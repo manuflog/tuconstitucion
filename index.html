@@ -225,6 +225,59 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .prompts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px}
 .prompts .pchip{background:#fff;border:1px solid #f0dcc8;color:var(--idea-osc);border-radius:18px;padding:6px 13px;font-size:.82rem;cursor:pointer}
 .prompts .pchip:hover{background:var(--idea);color:#fff;border-color:var(--idea)}
+
+/* Análisis de impacto */
+.hero.legis{background:linear-gradient(150deg,#243b6b 0%,#16233f 75%)}
+.hero.legis h1 em{color:#8fb4ff}
+.portal-grid{display:grid;grid-template-columns:1fr 340px;gap:22px;align-items:start}
+@media(max-width:920px){.portal-grid{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--linea);border-radius:12px;padding:20px}
+.card h2{color:var(--verde-osc);font-size:1.15rem;margin-bottom:10px}
+.seg{display:inline-flex;border:1px solid var(--linea);border-radius:8px;overflow:hidden;margin-bottom:4px}
+.seg button{background:#fff;border:none;padding:7px 14px;font-size:.85rem;color:var(--gris)}
+.seg button.act{background:var(--edu);color:#fff}
+.byo{border:1px solid #d6e6f2;background:var(--edu-bg);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:.86rem}
+.byo summary{cursor:pointer;font-weight:bold;color:var(--edu-osc);list-style:none}
+.byo summary::-webkit-details-marker{display:none}
+.byo .row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.byo input,.byo select{padding:8px;border:1px solid var(--linea);border-radius:7px;font-size:.85rem;font-family:inherit}
+.byo .k{flex:1;min-width:200px}
+.byo .warn{font-size:.76rem;color:#7a5c00;background:#fff8e6;border:1px solid #eedfae;border-radius:7px;padding:7px 9px;margin-top:8px}
+.nudge{font-size:.82rem;color:var(--idea-osc);background:var(--idea-bg);border:1px solid #f0dcc8;border-radius:8px;padding:9px 12px;margin-top:10px}
+
+/* Reporte */
+.reporte{border:1px solid var(--linea);border-radius:12px;overflow:hidden;background:#fff}
+.rep-head{background:linear-gradient(135deg,#243b6b,#16233f);color:#fff;padding:18px 20px}
+.rep-head h3{font-size:1.1rem;margin-bottom:4px}
+.rep-head .prov{font-size:.76rem;color:#b9c6e6;margin-top:6px}
+.rep-body{padding:18px 20px}
+.rep-sec{margin-bottom:18px}
+.rep-sec h4{font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;color:var(--edu);margin-bottom:6px;border-bottom:1px solid var(--linea);padding-bottom:4px}
+.rep-sec p{font-size:.94rem;line-height:1.55;margin-bottom:6px}
+.rep-sec ul{margin:4px 0 4px 18px}
+.rep-sec li{font-size:.9rem;line-height:1.5;margin-bottom:5px}
+.sectores{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.sect{border:1px solid var(--linea);border-radius:10px;padding:12px;border-left:4px solid var(--gris)}
+.sect.alto{border-left-color:var(--rojo)} .sect.medio{border-left-color:var(--oro)} .sect.bajo{border-left-color:var(--verde)}
+.sect .st{font-weight:bold;color:var(--verde-osc);font-size:.9rem;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.sect .nv{font-size:.68rem;text-transform:uppercase;letter-spacing:.4px;padding:1px 7px;border-radius:10px;color:#fff}
+.sect.alto .nv{background:var(--rojo)} .sect.medio .nv{background:var(--oro);color:#3a2f14} .sect.bajo .nv{background:var(--verde)}
+.sect .an{font-size:.84rem;color:var(--tinta);margin-top:5px;line-height:1.45}
+.sect .rg{font-size:.78rem;color:var(--gris);margin-top:5px;font-style:italic}
+.gauge{display:flex;align-items:center;gap:10px;margin-top:8px}
+.gauge .bar{flex:1;height:9px;border-radius:6px;background:rgba(255,255,255,.25);overflow:hidden}
+.gauge .fill{height:100%;background:var(--oro)}
+.gauge .val{font-weight:bold;font-size:1.1rem}
+.aart{display:inline-flex;gap:5px;align-items:center;border:1px solid var(--linea);border-radius:8px;padding:5px 9px;margin:3px 5px 3px 0;font-size:.84rem}
+.aart a{font-weight:bold}
+.rel-mod{color:var(--rojo)} .rel-contradice{color:var(--rojo)} .rel-impacta{color:var(--oro)} .rel-complementa{color:var(--verde)}
+.rank-item{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--linea);cursor:pointer}
+.rank-item:hover{background:var(--fondo-nota)}
+.rank-score{flex:none;width:46px;height:46px;border-radius:10px;background:var(--edu-bg);color:var(--edu-osc);font-weight:bold;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.rank-item h4{font-size:.92rem;color:var(--verde-osc);margin-bottom:2px}
+.rank-item .rm{font-size:.76rem;color:var(--gris)}
+.trace{font-size:.78rem;color:var(--gris);background:var(--papel);border:1px dashed var(--linea);border-radius:8px;padding:10px 12px;margin-top:12px}
+.trace b{color:var(--verde-osc)}
 </style>
 </head>
 <body>
@@ -236,6 +289,7 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
       <a href="#/" data-nav="/">Inicio</a>
       <a href="#/constitucion" data-nav="/constitucion">La Constitución</a>
       <a href="#/grafo" data-nav="/grafo">Grafo de relaciones</a>
+      <a href="#/analisis" data-nav="/analisis">Análisis de impacto</a>
       <a href="#/propuestas" data-nav="/propuestas">Propuestas ciudadanas</a>
       <a href="#/acerca" data-nav="/acerca">Acerca del proyecto</a>
     </nav>
@@ -319,6 +373,7 @@ function ruta(){
   if(mArt) return vistaArticulo(+mArt[1]);
   if(h.startsWith('/constitucion')) return vistaConstitucion();
   if(h.startsWith('/grafo')) return vistaGrafo();
+  if(h.startsWith('/analisis')) return vistaAnalisis();
   if(h.startsWith('/propuestas')) return vistaPropuestas();
   if(h.startsWith('/acerca')) return vistaAcerca();
   return vistaInicio();
@@ -836,6 +891,220 @@ async function vistaPropuestas(){
     <div id="lista-props" style="margin-top:16px"><div class="spinner">Cargando ideas…</div></div>
   </div>`;
   cargarPropuestas(null, document.getElementById('lista-props'), null);
+}
+
+/* ---------- Análisis de impacto legislativo ---------- */
+const NIVELES = {alto:'alto', medio:'medio', bajo:'bajo'};
+function byoGuardado(){
+  return {
+    provider: sessionStorage.getItem('tc_byo_provider')||'',
+    key: sessionStorage.getItem('tc_byo_key')||'',
+    model: sessionStorage.getItem('tc_byo_model')||''
+  };
+}
+let _tier = 'sonnet';
+
+async function vistaAnalisis(){
+  const b = byoGuardado();
+  app.innerHTML = `
+  <div class="hero legis">
+    <h1>Análisis de <em>impacto legislativo</em></h1>
+    <p>Propón una edición o comparte una reforma planeada y obtén un reporte estructurado: qué cambia, a qué artículos afecta, su impacto por sector (salud, educación, derechos humanos…), riesgos, consecuencias adyacentes y alternativas — todo fundamentado en el texto vigente y su historial. Cada análisis queda registrado y es trazable.</p>
+  </div>
+  <div class="portal-grid">
+    <div>
+      <div class="card">
+        <h2>Analizar una propuesta</h2>
+        <div class="seg" id="seg-kind">
+          <button data-k="reform" class="act">Reforma planeada</button>
+          <button data-k="edit">Editar un artículo</button>
+          <button data-k="question">Duda / consulta</button>
+        </div>
+        <form class="nueva sans" id="f-analisis" style="border:none;padding:0;margin-top:8px">
+          <div class="row2" style="display:flex;gap:10px;flex-wrap:wrap">
+            <div style="flex:1;min-width:180px"><label>Tu nombre (público)</label><input name="autor" maxlength="80" required value="${esc(nombreGuardado())}" placeholder="Ej. Dip. Juan P. / María, Jalisco"></div>
+            <div style="width:170px"><label>Perfil</label><select name="rol"><option value="ciudadano">Ciudadanía</option><option value="legislador">Legislador/a</option><option value="especialista">Especialista</option></select></div>
+            <div style="width:130px"><label>Artículo</label><input name="art" type="number" min="1" max="136" placeholder="ej. 4"></div>
+          </div>
+          <label>Título de la propuesta</label><input name="titulo" maxlength="240" minlength="6" required placeholder="Resume la reforma en una frase">
+          <label id="lbl-body">Describe la reforma: qué buscas cambiar y por qué</label>
+          <textarea name="body" maxlength="12000" minlength="20" required placeholder="Explica el cambio y su intención. Puedes usar lenguaje común; el análisis traduce el tecnicismo."></textarea>
+          <label id="lbl-prop" style="display:none">Texto propuesto (opcional): cómo quedaría el artículo</label>
+          <textarea name="prop" maxlength="8000" style="display:none;min-height:80px" placeholder="Redacción propuesta del artículo, si la tienes"></textarea>
+
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px">
+            <span style="font-size:.82rem;color:var(--gris)">Motor:</span>
+            <div class="seg" id="seg-tier">
+              <button type="button" data-t="sonnet" class="act">Sonnet (equilibrado)</button>
+              <button type="button" data-t="haiku">Haiku (económico)</button>
+            </div>
+          </div>
+
+          <details class="byo" ${b.key?'open':''}>
+            <summary>⚙️ Usar mi propia API key (uso intensivo, sin límite)</summary>
+            <p style="margin:8px 0;color:#40607f">Para análisis largos o muchas consultas, usa tu propia cuenta. Tu llave se envía cifrada para esta consulta y <b>no se guarda en el servidor</b>; solo queda en esta pestaña.</p>
+            <div class="row">
+              <select name="byo_provider" class="prov">
+                <option value="">— Plataforma (compartida) —</option>
+                <option value="anthropic" ${b.provider==='anthropic'?'selected':''}>Anthropic (Claude)</option>
+                <option value="openai" ${b.provider==='openai'?'selected':''}>OpenAI (GPT)</option>
+              </select>
+              <input name="byo_key" class="k" type="password" placeholder="Tu API key" value="${esc(b.key)}">
+              <input name="byo_model" placeholder="modelo (opcional)" value="${esc(b.model)}" style="width:150px">
+            </div>
+            <div class="warn">Consejo de seguridad: usa una llave con límite de gasto. No la compartas. Se borra al cerrar la pestaña.</div>
+          </details>
+
+          <div id="nudge-zona"></div>
+          <div style="margin-top:14px"><button class="btn idea" type="submit">⚡ Generar análisis de impacto</button></div>
+        </form>
+      </div>
+      <div id="resultado" style="margin-top:18px"></div>
+    </div>
+    <aside>
+      <div class="card">
+        <h2>🔥 Reformas más impactantes</h2>
+        <p style="font-size:.84rem;color:var(--gris);margin-bottom:6px">Ordenadas por el impacto estimado de su análisis. Lo relevante sube; el ruido baja.</p>
+        <div id="ranking"><div class="spinner">Cargando…</div></div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <h2>Cómo funciona</h2>
+        <p style="font-size:.86rem;color:#3a4650;line-height:1.5">Cada análisis reúne el texto oficial del artículo, sus relaciones y su historial de reformas, y produce un reporte por secciones. Los análisis <b>no se sobrescriben</b>: si surge uno mejor, queda como nueva versión que reemplaza a la anterior y registra por qué. Conocimiento que se acumula y es trazable.</p>
+      </div>
+    </aside>
+  </div>`;
+
+  // segmented controls
+  let kind='reform';
+  document.querySelectorAll('#seg-kind button').forEach(x=>x.addEventListener('click',()=>{
+    document.querySelectorAll('#seg-kind button').forEach(y=>y.classList.remove('act')); x.classList.add('act'); kind=x.dataset.k;
+    const isEdit = kind==='edit';
+    document.getElementById('lbl-prop').style.display = isEdit?'':'none';
+    document.querySelector('[name=prop]').style.display = isEdit?'':'none';
+    document.getElementById('lbl-body').textContent = kind==='question'?'Tu duda o consulta sobre este artículo':'Describe la reforma: qué buscas cambiar y por qué';
+  }));
+  document.querySelectorAll('#seg-tier button').forEach(x=>x.addEventListener('click',()=>{
+    document.querySelectorAll('#seg-tier button').forEach(y=>y.classList.remove('act')); x.classList.add('act'); _tier=x.dataset.t;
+  }));
+
+  // nudge for long analyses
+  const bodyEl = document.querySelector('#f-analisis [name=body]');
+  bodyEl.addEventListener('input', ()=>{
+    const z=document.getElementById('nudge-zona');
+    z.innerHTML = bodyEl.value.length>1200
+      ? `<div class="nudge">Esta propuesta es extensa: el análisis puede tardar y consumir más. Considera el modo <b>Haiku (económico)</b> o usar <b>tu propia API key</b> arriba.</div>` : '';
+  });
+
+  document.getElementById('f-analisis').addEventListener('submit', ev=>enviarAnalisis(ev, ()=>kind));
+  cargarRanking();
+}
+
+async function enviarAnalisis(ev, getKind){
+  ev.preventDefault();
+  const f=ev.target, btn=f.querySelector('button[type=submit]');
+  const kind=getKind();
+  const res=document.getElementById('resultado');
+  localStorage.setItem('tc_nombre', f.autor.value.trim());
+  // guardar BYO en sessionStorage (solo pestaña)
+  const provider=f.byo_provider.value, bkey=f.byo_key.value.trim(), bmodel=f.byo_model.value.trim();
+  if(provider && bkey){ sessionStorage.setItem('tc_byo_provider',provider); sessionStorage.setItem('tc_byo_key',bkey); sessionStorage.setItem('tc_byo_model',bmodel); }
+  else { sessionStorage.removeItem('tc_byo_key'); }
+
+  btn.disabled=true; btn.textContent='Analizando… (puede tardar ~15-40s)';
+  res.innerHTML=`<div class="card"><div class="spinner">Reuniendo el texto oficial, sus relaciones y su historial, y redactando el reporte…</div></div>`;
+  try{
+    const { data:reform, error:e1 } = await db.from('tc_reforms').insert({
+      kind, target_article: f.art.value?+f.art.value:null,
+      title: f.titulo.value.trim(), body: f.body.value.trim(),
+      proposed_text: kind==='edit'?f.prop.value.trim():'',
+      author_name: f.autor.value.trim()||'Ciudadano/a', author_role: f.rol.value, voter_key: voterKey
+    }).select().single();
+    if(e1) throw new Error(e1.message);
+
+    const body={ reform_id: reform.id, voter_key: voterKey, tier:_tier };
+    if(provider && bkey) body.byo={ provider, key:bkey, model:bmodel||undefined };
+    const { data, error:e2 } = await db.functions.invoke('analizar-reforma', { body });
+    if(e2){
+      // intentar leer el cuerpo del error (límite / sin llave)
+      let info={}; try{ info = await e2.context.json(); }catch(_){}
+      if(info.need_key) throw new Error('La plataforma aún no tiene configurada la llave de IA. Puedes usar tu propia API key en el panel de arriba mientras tanto.');
+      if(info.suggest_byo) throw new Error(info.message||'Alcanzaste el límite diario. Usa tu propia API key para continuar.');
+      throw new Error(info.error||e2.message||'No se pudo generar el análisis.');
+    }
+    btn.disabled=false; btn.textContent='⚡ Generar análisis de impacto';
+    res.innerHTML = reporteHTML(data.analysis, reform, data.cached);
+    res.scrollIntoView({behavior:'smooth', block:'start'});
+    cargarRanking();
+  }catch(err){
+    btn.disabled=false; btn.textContent='⚡ Generar análisis de impacto';
+    res.innerHTML = `<div class="errbox sans">${esc(err.message)}</div>`;
+  }
+}
+
+function reporteHTML(a, reform, cached){
+  const r=a.report||{};
+  const li = arr => (arr&&arr.length)?`<ul>${arr.map(x=>`<li>${esc(String(x))}</li>`).join('')}</ul>`:'<p class="vacio">—</p>';
+  const sect = (r.impacto_por_sector||[]).map(s=>{
+    const nv=(s.nivel||'bajo').toLowerCase();
+    return `<div class="sect ${NIVELES[nv]||'bajo'}">
+      <div class="st">${esc(s.sector||'')}<span class="nv">${esc(nv)}</span></div>
+      <div class="an">${esc(s.analisis||'')}</div>
+      ${s.riesgos?`<div class="rg">⚠ ${esc(s.riesgos)}</div>`:''}
+    </div>`; }).join('');
+  const arts=(r.articulos_afectados||[]).map(x=>`<span class="aart">Art. <a href="#/articulo/${esc(x.articulo)}">${esc(x.articulo)}</a> <span class="rel-${esc((x.relacion||'').split('|')[0])}">${esc(x.relacion||'')}</span></span>`).join('');
+  const score=Math.round(a.impact_score||r.puntaje_impacto||0);
+  return `<div class="reporte sans">
+    <div class="rep-head">
+      <h3>${esc(reform.title)}</h3>
+      <div style="font-size:.8rem;color:#cdd8f0">${esc(reform.author_name)} · ${esc(reform.author_role)}${reform.target_article?' · Art. '+reform.target_article:''}${cached?' · (análisis en caché)':''}</div>
+      <div class="gauge"><span class="val">${score}</span><div class="bar"><div class="fill" style="width:${score}%"></div></div><span style="font-size:.74rem;color:#b9c6e6">impacto / confianza: ${esc(a.confidence||r.confianza||'media')}</span></div>
+    </div>
+    <div class="rep-body">
+      <div class="rep-sec"><h4>Resumen en lenguaje sencillo</h4><p>${esc(r.resumen_sencillo||'')}</p></div>
+      <div class="rep-sec"><h4>Qué cambia</h4><p>${esc(r.que_cambia||'')}</p></div>
+      ${arts?`<div class="rep-sec"><h4>Artículos afectados</h4><div>${arts}</div></div>`:''}
+      <div class="rep-sec"><h4>Impacto por sector</h4><div class="sectores">${sect||'<p class="vacio">—</p>'}</div></div>
+      <div class="rep-sec"><h4>Consecuencias adyacentes (2.º orden)</h4>${li(r.consecuencias_adyacentes)}</div>
+      <div class="rep-sec"><h4>Riesgos de constitucionalidad</h4>${li(r.riesgos_constitucionales)}</div>
+      <div class="rep-sec"><h4>Consideraciones al legislar</h4>${li(r.consideraciones)}</div>
+      <div class="rep-sec"><h4>Alternativas y posibles soluciones</h4>${li(r.alternativas)}</div>
+      <div class="rep-sec"><h4>Precedentes</h4>${li(r.precedentes)}</div>
+      <div class="trace">
+        <b>Trazabilidad:</b> versión ${a.version} · modelo ${esc(a.provider)}/${esc(a.model)}${a.byo?' (llave del usuario)':''} · ${new Date(a.created_at).toLocaleString('es-MX')}.
+        ${a.rationale?'<br><b>Por qué este análisis:</b> '+esc(a.rationale):''}
+        ${(r.fuentes&&r.fuentes.length)?'<br><b>Fuentes citadas:</b> '+esc(r.fuentes.join(', ')):''}
+        <br><span style="color:var(--gris)">Este análisis es informativo y no sustituye asesoría jurídica ni el proceso legislativo formal (arts. 71 y 135).</span>
+      </div>
+      ${reform.author_role==='legislador'?`<div style="margin-top:12px"><button class="btn sec sans" onclick="alert('Próximamente: exportar como proyecto de decreto e iniciativa lista para el Congreso.')">📄 Preparar para el Congreso</button></div>`:''}
+    </div>
+  </div>`;
+}
+
+async function cargarRanking(){
+  const cont=document.getElementById('ranking'); if(!cont) return;
+  try{
+    const { data } = await db.from('tc_reforms').select('*').eq('status','analizada').order('impact_score',{ascending:false}).limit(12);
+    if(!data||!data.length){ cont.innerHTML='<div class="vacio sans">Aún no hay análisis. Genera el primero y aparecerá aquí.</div>'; return; }
+    cont.innerHTML = data.map(r=>`<div class="rank-item" data-id="${r.id}">
+      <div class="rank-score">${Math.round(r.impact_score||0)}</div>
+      <div><h4>${esc(r.title)}</h4><div class="rm">${esc(r.author_name)} · ${esc(r.author_role)}${r.target_article?' · Art. '+r.target_article:''}</div></div>
+    </div>`).join('');
+    cont.querySelectorAll('.rank-item').forEach(el=>el.addEventListener('click',()=>verAnalisis(el.dataset.id)));
+  }catch(e){ cont.innerHTML=`<div class="errbox sans">No se pudo cargar el ranking.</div>`; }
+}
+
+async function verAnalisis(reformId){
+  const res=document.getElementById('resultado');
+  res.innerHTML=`<div class="card"><div class="spinner">Cargando análisis…</div></div>`;
+  res.scrollIntoView({behavior:'smooth', block:'start'});
+  try{
+    const [{data:reforms},{data:analyses}] = await Promise.all([
+      db.from('tc_reforms').select('*').eq('id',reformId).limit(1),
+      db.from('tc_analyses').select('*').eq('reform_id',reformId).order('version',{ascending:false}).limit(1)
+    ]);
+    if(reforms&&reforms[0]&&analyses&&analyses[0]) res.innerHTML=reporteHTML(analyses[0], reforms[0], true);
+    else res.innerHTML=`<div class="errbox sans">No se encontró el análisis.</div>`;
+  }catch(e){ res.innerHTML=`<div class="errbox sans">Error al cargar.</div>`; }
 }
 
 function vistaAcerca(){
