@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tuConstitución.mx — La Constitución del pueblo, por y para el pueblo</title>
+<meta name="description" content="Plataforma ciudadana para leer, discutir y proponer mejoras a la Constitución Política de los Estados Unidos Mexicanos.">
+<style>
+:root{
+  --verde:#006847; --verde-osc:#00563b; --rojo:#ce1126; --oro:#c8a25f;
+  --tinta:#1f2328; --gris:#57606a; --linea:#e3e0d8; --papel:#faf8f3; --blanco:#fff;
+  --nota:#8a7c5e; --fondo-nota:#f6f1e4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,'Times New Roman',serif;color:var(--tinta);background:var(--papel);line-height:1.65}
+a{color:var(--verde);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:inherit;cursor:pointer}
+.sans{font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+
+/* Header */
+header{background:var(--verde);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.hwrap{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:18px;padding:10px 20px;flex-wrap:wrap}
+.logo{font-size:1.35rem;font-weight:bold;color:#fff;white-space:nowrap}
+.logo em{color:var(--oro);font-style:normal}
+.logo:hover{text-decoration:none}
+nav.main{display:flex;gap:4px;flex-wrap:wrap}
+nav.main a{color:#e8f2ee;padding:6px 12px;border-radius:6px;font-size:.92rem}
+nav.main a:hover{background:rgba(255,255,255,.12);text-decoration:none}
+nav.main a.act{background:rgba(255,255,255,.18);color:#fff}
+.buscawrap{margin-left:auto;position:relative;min-width:230px;flex:1;max-width:340px}
+.buscawrap input{width:100%;padding:8px 12px;border:none;border-radius:8px;font-size:.9rem;background:rgba(255,255,255,.94)}
+.sugeridos{position:absolute;top:105%;left:0;right:0;background:#fff;border:1px solid var(--linea);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.15);max-height:340px;overflow:auto;display:none;z-index:60}
+.sugeridos a{display:block;padding:9px 12px;border-bottom:1px solid #f0ede4;color:var(--tinta);font-size:.88rem}
+.sugeridos a b{color:var(--verde)}
+.sugeridos a:hover{background:var(--fondo-nota);text-decoration:none}
+
+/* Layout */
+.wrap{max-width:1200px;margin:0 auto;padding:24px 20px}
+.cols{display:grid;grid-template-columns:290px 1fr;gap:28px;align-items:start}
+@media(max-width:860px){.cols{grid-template-columns:1fr}}
+
+/* Sidebar */
+aside.indice{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:14px;position:sticky;top:70px;max-height:calc(100vh - 90px);overflow:auto}
+.tit-grp{margin-bottom:4px}
+.tit-grp>button{width:100%;text-align:left;background:none;border:none;padding:8px 6px;font-family:inherit;font-size:.9rem;font-weight:bold;color:var(--verde-osc);border-radius:6px;display:flex;justify-content:space-between;gap:6px}
+.tit-grp>button:hover{background:var(--fondo-nota)}
+.cap-grp{padding-left:8px;display:none}
+.cap-grp.open{display:block}
+.cap-nom{font-size:.78rem;color:var(--gris);padding:6px 4px 2px;font-style:italic}
+.arts{display:flex;flex-wrap:wrap;gap:4px;padding:4px}
+.arts a{display:inline-block;min-width:34px;text-align:center;padding:3px 6px;border:1px solid var(--linea);border-radius:6px;font-size:.8rem;color:var(--tinta);background:#fff}
+.arts a.tiene{border-color:var(--verde);color:var(--verde);font-weight:bold}
+.arts a.act{background:var(--verde);color:#fff;border-color:var(--verde)}
+.arts a:hover{text-decoration:none;border-color:var(--verde)}
+
+/* Article */
+.tarjeta{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:28px 32px}
+@media(max-width:600px){.tarjeta{padding:18px}}
+.miga{font-size:.8rem;color:var(--gris);margin-bottom:10px}
+h1.art-tit{font-size:1.7rem;color:var(--verde-osc);margin-bottom:2px}
+.art-tema{color:var(--gris);font-style:italic;margin-bottom:14px}
+.fuentebox{background:var(--fondo-nota);border:1px solid #e8dfc8;border-radius:8px;padding:10px 14px;font-size:.82rem;color:#6b5d3f;margin:14px 0}
+.texto p{margin:0 0 13px}
+.texto p.frac{padding-left:26px}
+.texto p.inc{padding-left:52px}
+.texto p.nota{font-size:.74rem;color:var(--nota);font-style:italic;margin:-8px 0 13px;padding-left:8px;border-left:2px solid #e0d5b8}
+.pendiente{background:#fff8e6;border:1px solid #eedfae;border-radius:8px;padding:18px;margin:16px 0}
+
+/* Tabs */
+.tabs{display:flex;gap:6px;border-bottom:2px solid var(--linea);margin:22px 0 18px}
+.tabs button{background:none;border:none;padding:9px 16px;font-size:.95rem;color:var(--gris);border-bottom:3px solid transparent;margin-bottom:-2px}
+.tabs button.act{color:var(--verde-osc);font-weight:bold;border-bottom-color:var(--rojo)}
+.badge{display:inline-block;background:var(--rojo);color:#fff;border-radius:10px;font-size:.72rem;padding:1px 8px;margin-left:5px;vertical-align:2px}
+
+/* Proposals */
+.prop{border:1px solid var(--linea);border-radius:10px;padding:14px 16px;margin-bottom:12px;background:#fffdf9;display:flex;gap:14px}
+.votos{display:flex;flex-direction:column;align-items:center;min-width:44px}
+.votos button{background:none;border:1px solid var(--linea);border-radius:6px;width:34px;height:28px;font-size:.9rem;color:var(--gris)}
+.votos button:hover{border-color:var(--verde);color:var(--verde)}
+.votos button.mio{background:var(--verde);color:#fff;border-color:var(--verde)}
+.votos .num{font-weight:bold;font-size:1.05rem;padding:3px 0}
+.prop h4{color:var(--verde-osc);margin-bottom:3px}
+.prop .metap{font-size:.76rem;color:var(--gris);margin-bottom:7px}
+.prop .cuerpo{font-size:.92rem;white-space:pre-wrap}
+.etiq{display:inline-block;font-size:.7rem;padding:1px 8px;border-radius:10px;background:#e8f2ee;color:var(--verde-osc);margin-right:6px;text-transform:uppercase;letter-spacing:.4px}
+.etiq.rojo{background:#fdeaea;color:var(--rojo)}
+.comms{margin-top:10px;border-top:1px dashed var(--linea);padding-top:8px}
+.comms .c{font-size:.85rem;margin-bottom:6px}
+.comms .c b{color:var(--verde-osc)}
+.btn{background:var(--verde);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:.92rem}
+.btn:hover{background:var(--verde-osc)}
+.btn.sec{background:#fff;color:var(--verde);border:1px solid var(--verde)}
+.btn.mini{padding:4px 10px;font-size:.78rem}
+form.nueva{background:#fff;border:2px dashed var(--linea);border-radius:10px;padding:18px;margin-bottom:18px}
+form.nueva label{display:block;font-size:.82rem;color:var(--gris);margin:10px 0 3px}
+form.nueva input,form.nueva textarea,form.nueva select{width:100%;padding:9px;border:1px solid var(--linea);border-radius:7px;font-family:inherit;font-size:.9rem;background:#fff}
+form.nueva textarea{min-height:110px}
+.aviso{font-size:.8rem;color:var(--gris);margin-top:8px}
+.vacio{color:var(--gris);font-style:italic;padding:14px 0}
+
+/* Home */
+.hero{background:linear-gradient(150deg,var(--verde) 0%,var(--verde-osc) 70%);color:#fff;border-radius:14px;padding:52px 40px;margin-bottom:26px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border:30px solid rgba(200,162,95,.25);border-radius:50%}
+.hero h1{font-size:2.3rem;line-height:1.2;max-width:640px;margin-bottom:14px}
+.hero h1 em{color:var(--oro);font-style:normal}
+.hero p{max-width:600px;font-size:1.05rem;opacity:.94;margin-bottom:22px}
+@media(max-width:600px){.hero{padding:30px 22px}.hero h1{font-size:1.6rem}}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:26px 0}
+.stat{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:18px;text-align:center}
+.stat .n{font-size:1.9rem;font-weight:bold;color:var(--verde-osc)}
+.stat .l{font-size:.82rem;color:var(--gris)}
+.pasos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:20px 0 30px}
+.paso{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:20px;border-top:4px solid var(--rojo)}
+.paso:nth-child(2){border-top-color:var(--verde)}
+.paso:nth-child(3){border-top-color:var(--oro)}
+.paso h3{color:var(--verde-osc);margin-bottom:8px;font-size:1.02rem}
+.paso p{font-size:.9rem;color:var(--gris)}
+h2.secc{color:var(--verde-osc);margin:26px 0 12px;font-size:1.3rem;border-bottom:2px solid var(--oro);padding-bottom:6px;display:inline-block}
+.destacados{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.dest{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:16px;display:block;color:var(--tinta)}
+.dest:hover{border-color:var(--verde);text-decoration:none;box-shadow:0 4px 12px rgba(0,104,71,.08)}
+.dest .anum{font-weight:bold;color:var(--rojo);font-size:.8rem;letter-spacing:.5px}
+.dest .atem{color:var(--verde-osc);font-weight:bold;margin:3px 0 6px}
+.dest .aext{font-size:.82rem;color:var(--gris);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+footer{margin-top:44px;background:var(--tinta);color:#c9cdd2;font-size:.84rem}
+footer .fwrap{max-width:1200px;margin:0 auto;padding:26px 20px;display:grid;grid-template-columns:2fr 1fr;gap:24px}
+@media(max-width:700px){footer .fwrap{grid-template-columns:1fr}}
+footer a{color:var(--oro)}
+footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
+.spinner{color:var(--gris);font-style:italic;padding:16px 0}
+.errbox{background:#fdeaea;border:1px solid #f3c1c1;color:#8c1c1c;border-radius:8px;padding:12px 16px;margin:12px 0;font-size:.88rem}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <a class="logo" href="#/">tu<em>Constitución</em>.mx</a>
+    <nav class="main sans">
+      <a href="#/" data-nav="/">Inicio</a>
+      <a href="#/constitucion" data-nav="/constitucion">La Constitución</a>
+      <a href="#/propuestas" data-nav="/propuestas">Propuestas ciudadanas</a>
+      <a href="#/acerca" data-nav="/acerca">Acerca del proyecto</a>
+    </nav>
+    <div class="buscawrap sans">
+      <input id="buscador" type="search" placeholder="Buscar artículo o tema… (ej. 27, educación)" autocomplete="off">
+      <div class="sugeridos" id="sugeridos"></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap" id="app"><div class="spinner">Cargando…</div></div>
+
+<footer>
+  <div class="fwrap">
+    <div>
+      <h4>tuConstitución.mx</h4>
+      <p>Plataforma ciudadana e independiente para leer, discutir y proponer mejoras a la Constitución. Este sitio <b>no es un medio oficial</b>: el único órgano de publicación oficial de reformas es el <a href="https://www.dof.gob.mx/" target="_blank" rel="noopener">Diario Oficial de la Federación</a>, y el texto vigente consolidado lo mantiene la <a href="https://www.diputados.gob.mx/LeyesBiblio/ref/cpeum.htm" target="_blank" rel="noopener">Cámara de Diputados (Leyes Biblio)</a>.</p>
+    </div>
+    <div>
+      <h4>Fuentes oficiales</h4>
+      <p><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/CPEUM.pdf" target="_blank" rel="noopener">Texto vigente (PDF oficial)</a><br>
+      <a href="https://www.diputados.gob.mx/LeyesBiblio/ref/cpeum_crono.htm" target="_blank" rel="noopener">Reformas en orden cronológico</a><br>
+      <a href="https://www.dof.gob.mx/" target="_blank" rel="noopener">Diario Oficial de la Federación</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="estructura.js"></script>
+<script src="textos_a.js"></script>
+<script src="textos_b.js"></script>
+<script src="textos_c.js"></script>
+<script src="textos_d.js"></script>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SUPABASE_URL = 'https://hvxidkdxlhewliettepl.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_5g1Tf58YSdkry8ZfnCuezA_NMUvOV5e';
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const META = window.CPEUM_META, EST = window.CPEUM_ESTRUCTURA,
+      TEMAS = window.CPEUM_TEMAS, TEXTOS = window.CPEUM_TEXTOS;
+const app = document.getElementById('app');
+
+/* identidad ligera del visitante (para votos) */
+let voterKey = localStorage.getItem('tc_voter');
+if(!voterKey){ voterKey = crypto.randomUUID(); localStorage.setItem('tc_voter', voterKey); }
+const nombreGuardado = () => localStorage.getItem('tc_nombre') || '';
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtFecha = iso => new Date(iso).toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
+const ordinal = n => n===1?'1o.':n===2?'2o.':n===3?'3o.':n===4?'4o.':n===5?'5o.':n===6?'6o.':n===7?'7o.':n===8?'8o.':n===9?'9o.':String(n);
+const capitulos = () => EST.flatMap(t => t.capitulos.map(c => ({...c, titulo: t.titulo})));
+const capDe = n => capitulos().find(c => n>=c.desde && n<=c.hasta);
+
+const RE_NOTA = /^((Párrafo|Fracción|Inciso|Apartado|Artículo|Denominación|Fe de erratas|Reforma DOF)[^]*?DOF[^]*|Artículo original DOF.*|Reforma DOF.*)$/;
+const RE_FRAC = /^(X{0,3}(IX|IV|V?I{0,3})\.)\s/;
+const RE_INC = /^[a-z]\)\s/;
+
+function renderTexto(txt){
+  return txt.split('\n').map(l=>{
+    l = l.trim(); if(!l) return '';
+    if(RE_NOTA.test(l)) return `<p class="nota">${esc(l)}</p>`;
+    let cls = RE_INC.test(l) ? 'inc' : (RE_FRAC.test(l) ? 'frac' : '');
+    return `<p class="${cls}">${esc(l)}</p>`;
+  }).join('');
+}
+
+/* ---------- router ---------- */
+window.addEventListener('hashchange', ruta);
+function ruta(){
+  const h = (location.hash.replace(/^#/,'') || '/');
+  document.querySelectorAll('[data-nav]').forEach(a=>{
+    const p = a.dataset.nav;
+    a.classList.toggle('act', p==='/' ? h==='/' : h.startsWith(p));
+  });
+  window.scrollTo(0,0);
+  const mArt = h.match(/^\/articulo\/(\d+)/);
+  if(mArt) return vistaArticulo(+mArt[1]);
+  if(h.startsWith('/constitucion')) return vistaConstitucion();
+  if(h.startsWith('/propuestas')) return vistaPropuestas();
+  if(h.startsWith('/acerca')) return vistaAcerca();
+  return vistaInicio();
+}
+
+/* ---------- sidebar ---------- */
+function sidebarHTML(actual){
+  return `<aside class="indice sans">${EST.map((t,i)=>{
+    const abierto = t.capitulos.some(c => actual>=c.desde && actual<=c.hasta) || (actual==null && i===0);
+    return `<div class="tit-grp">
+      <button data-tog="${i}"><span>${esc(t.titulo.split('—')[0].trim())}</span><span>${abierto?'▾':'▸'}</span></button>
+      <div class="cap-grp${abierto?' open':''}" id="grp${i}">
+        ${t.titulo.includes('—')?`<div class="cap-nom">${esc(t.titulo.split('—')[1])}</div>`:''}
+        ${t.capitulos.map(c=>`
+          ${c.nombre?`<div class="cap-nom">${esc(c.nombre)}</div>`:''}
+          <div class="arts">${rango(c.desde,c.hasta).map(n=>
+            `<a href="#/articulo/${n}" class="${TEXTOS[n]?'tiene':''}${n===actual?' act':''}" title="${esc(TEMAS[n]||'Artículo '+n)}">${n}</a>`).join('')}
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('')}</aside>`;
+}
+const rango=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+function wireSidebar(){
+  document.querySelectorAll('[data-tog]').forEach(b=>b.addEventListener('click',()=>{
+    const g=document.getElementById('grp'+b.dataset.tog);
+    g.classList.toggle('open');
+    b.querySelector('span:last-child').textContent = g.classList.contains('open')?'▾':'▸';
+  }));
+}
+
+/* ---------- vistas ---------- */
+async function vistaInicio(){
+  app.innerHTML = `
+  <div class="hero">
+    <h1>La primera Constitución <em>del pueblo</em>, construida por la ciudadanía</h1>
+    <p>Lee el texto vigente, discútelo artículo por artículo y presenta propuestas de reforma que juntos podemos llevar ante nuestras y nuestros representantes. Una alternativa democrática, viva y en constante evolución.</p>
+    <a class="btn sans" href="#/constitucion" style="background:var(--oro);color:#3a2f14">Explorar la Constitución</a>
+    <a class="btn sec sans" href="#/propuestas" style="margin-left:8px;background:transparent;color:#fff;border-color:rgba(255,255,255,.6)">Ver propuestas</a>
+  </div>
+  <div class="stats sans" id="stats">
+    <div class="stat"><div class="n">136</div><div class="l">artículos constitucionales</div></div>
+    <div class="stat"><div class="n" id="st-props">…</div><div class="l">propuestas ciudadanas</div></div>
+    <div class="stat"><div class="n" id="st-votos">…</div><div class="l">votos emitidos</div></div>
+    <div class="stat"><div class="n">${META.ultimaReforma.replace('DOF ','')}</div><div class="l">última reforma (DOF)</div></div>
+  </div>
+  <h2 class="secc">¿Cómo funciona?</h2>
+  <div class="pasos sans">
+    <div class="paso"><h3>1 · Lee y entiende</h3><p>Consulta el texto vigente de cada artículo, con su historial de reformas, tomado directamente de la fuente oficial de la Cámara de Diputados.</p></div>
+    <div class="paso"><h3>2 · Propón y delibera</h3><p>Presenta propuestas de reforma, adición o derogación sobre cualquier artículo, y comenta y vota las propuestas de otras personas.</p></div>
+    <div class="paso"><h3>3 · Eleva la voz</h3><p>Las propuestas con mayor respaldo se preparan —con acompañamiento de especialistas— para presentarse ante representantes del Congreso de la Unión.</p></div>
+  </div>
+  <h2 class="secc">Artículos destacados</h2>
+  <div class="destacados sans">
+    ${[1,3,4,6,17,19].map(n=>`<a class="dest" href="#/articulo/${n}">
+      <div class="anum">ARTÍCULO ${ordinal(n).toUpperCase()}</div>
+      <div class="atem">${esc(TEMAS[n]||'')}</div>
+      <div class="aext">${esc((TEXTOS[n]||'').split('\n')[0].slice(0,180))}…</div>
+    </a>`).join('')}
+  </div>`;
+  try{
+    const [{count:p},{count:v}] = await Promise.all([
+      db.from('tc_proposals').select('*',{count:'exact',head:true}),
+      db.from('tc_votes').select('*',{count:'exact',head:true})
+    ]);
+    document.getElementById('st-props').textContent = p ?? 0;
+    document.getElementById('st-votos').textContent = v ?? 0;
+  }catch(e){ document.getElementById('st-props').textContent='—'; document.getElementById('st-votos').textContent='—'; }
+}
+
+function vistaConstitucion(){
+  app.innerHTML = `<div class="cols">${sidebarHTML(null)}
+  <div class="tarjeta">
+    <div class="miga sans">Inicio › La Constitución</div>
+    <h1 class="art-tit">${esc(META.nombre)}</h1>
+    <p class="art-tema">Publicada en el ${esc(META.publicacion)} · Última reforma ${esc(META.ultimaReforma)}</p>
+    <div class="fuentebox sans">📜 Texto sincronizado desde la fuente oficial: <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">${esc(META.fuenteOficialNombre)}</a>. Los artículos marcados en verde ya cuentan con texto completo en la plataforma; el resto enlaza al <a href="${META.textoVigentePdf}" target="_blank" rel="noopener">PDF oficial</a> mientras se completa la sincronización.</div>
+    <p>La Constitución se organiza en <b>nueve Títulos</b> que agrupan sus <b>136 artículos</b>, más los artículos transitorios de cada decreto de reforma. Usa el índice para navegar por Títulos y Capítulos, o el buscador para llegar directo a un artículo o tema.</p>
+    <h2 class="secc">Empieza por aquí</h2>
+    <div class="destacados sans">
+      ${[1,2,3,4,5,6,7,8].map(n=>`<a class="dest" href="#/articulo/${n}">
+        <div class="anum">ARTÍCULO ${ordinal(n).toUpperCase()}</div>
+        <div class="atem">${esc(TEMAS[n]||'')}</div></a>`).join('')}
+    </div>
+  </div></div>`;
+  wireSidebar();
+}
+
+async function vistaArticulo(n){
+  if(n<1||n>136){ location.hash='#/constitucion'; return; }
+  const cap = capDe(n), texto = TEXTOS[n];
+  app.innerHTML = `<div class="cols">${sidebarHTML(n)}
+  <div class="tarjeta">
+    <div class="miga sans"><a href="#/constitucion">La Constitución</a> › ${esc(cap.titulo.split('—')[0].trim())} ${cap.nombre?'› '+esc(cap.nombre.split('—')[0].trim()):''}</div>
+    <h1 class="art-tit">Artículo ${ordinal(n)}</h1>
+    ${TEMAS[n]?`<div class="art-tema">${esc(TEMAS[n])}</div>`:''}
+    <div style="margin:6px 0 2px">
+      <a class="btn mini sec sans" href="#/articulo/${n-1}" ${n<=1?'style="visibility:hidden"':''}>← Art. ${n-1}</a>
+      <a class="btn mini sec sans" href="#/articulo/${n+1}" ${n>=136?'style="visibility:hidden"':''}>Art. ${n+1} →</a>
+    </div>
+    <div class="tabs sans">
+      <button class="act" data-tab="texto">Texto vigente</button>
+      <button data-tab="props">Propuestas <span class="badge" id="nprops">…</span></button>
+    </div>
+    <div id="tab-texto">
+      ${texto ? `<div class="fuentebox sans">📜 Texto oficial vigente (última reforma ${esc(META.ultimaReforma)}) · Fuente: <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">Cámara de Diputados, Leyes Biblio</a></div>
+        <div class="texto">${renderTexto(texto)}</div>`
+      : `<div class="pendiente sans"><b>Texto en proceso de sincronización.</b><br>El texto íntegro y vigente de este artículo está disponible en la fuente oficial mientras completamos la incorporación verificada de los 136 artículos.<br><br><a class="btn" href="${META.textoVigentePdf}" target="_blank" rel="noopener">Leer Artículo ${n} en el PDF oficial (Cámara de Diputados)</a></div>
+        <p class="aviso sans">Aun sin el texto en plataforma, ya puedes crear y votar propuestas sobre este artículo en la pestaña «Propuestas».</p>`}
+    </div>
+    <div id="tab-props" style="display:none">
+      <button class="btn sans" id="btn-nueva">＋ Nueva propuesta para el Artículo ${n}</button>
+      <div id="zona-form"></div>
+      <div id="lista-props" style="margin-top:16px"><div class="spinner">Cargando propuestas…</div></div>
+    </div>
+  </div></div>`;
+  wireSidebar();
+
+  document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('act'));
+    b.classList.add('act');
+    document.getElementById('tab-texto').style.display = b.dataset.tab==='texto'?'':'none';
+    document.getElementById('tab-props').style.display = b.dataset.tab==='props'?'':'none';
+  }));
+  document.getElementById('btn-nueva').addEventListener('click',()=>formPropuesta(String(n)));
+  cargarPropuestas(String(n), document.getElementById('lista-props'), document.getElementById('nprops'));
+}
+
+function formPropuesta(articleId){
+  const z = document.getElementById('zona-form');
+  if(z.innerHTML){ z.innerHTML=''; return; }
+  z.innerHTML = `<form class="nueva sans">
+    <label>Tu nombre (público)</label><input name="autor" maxlength="60" required value="${esc(nombreGuardado())}" placeholder="Ej. María P., Oaxaca">
+    <label>Tipo de propuesta</label>
+    <select name="kind"><option value="reforma">Reforma (modificar el texto)</option><option value="adicion">Adición (agregar algo nuevo)</option><option value="derogacion">Derogación (eliminar una parte)</option><option value="interpretacion">Pregunta / interpretación</option></select>
+    <label>Título de la propuesta</label><input name="titulo" maxlength="200" minlength="8" required placeholder="Resume tu propuesta en una frase">
+    <label>Exposición de motivos y texto propuesto</label><textarea name="cuerpo" maxlength="8000" minlength="20" required placeholder="¿Qué cambiarías, cómo quedaría el texto y por qué beneficia al país?"></textarea>
+    <div style="margin-top:12px"><button class="btn" type="submit">Publicar propuesta</button></div>
+    <div class="aviso">Al publicar aceptas que tu propuesta sea pública y moderada por la comunidad y el equipo curador.</div>
+  </form>`;
+  z.querySelector('form').addEventListener('submit', async ev=>{
+    ev.preventDefault();
+    const f = ev.target, btn = f.querySelector('.btn');
+    btn.disabled = true; btn.textContent = 'Publicando…';
+    localStorage.setItem('tc_nombre', f.autor.value.trim());
+    const { error } = await db.from('tc_proposals').insert({
+      article_id: articleId, title: f.titulo.value.trim(), body: f.cuerpo.value.trim(),
+      author_name: f.autor.value.trim() || 'Ciudadano/a', kind: f.kind.value
+    });
+    if(error){ btn.disabled=false; btn.textContent='Publicar propuesta';
+      z.insertAdjacentHTML('beforeend', `<div class="errbox">No se pudo publicar: ${esc(error.message)}</div>`); return; }
+    z.innerHTML='';
+    const lista = document.getElementById('lista-props');
+    if(lista) cargarPropuestas(articleId, lista, document.getElementById('nprops'));
+  });
+}
+
+async function cargarPropuestas(articleId, cont, badge){
+  let q = db.from('tc_proposals').select('*').order('created_at',{ascending:false}).limit(50);
+  if(articleId) q = q.eq('article_id', articleId);
+  const { data: props, error } = await q;
+  if(error){ cont.innerHTML = `<div class="errbox sans">No se pudieron cargar las propuestas: ${esc(error.message)}</div>`; return; }
+  if(badge) badge.textContent = props.length;
+  if(!props.length){ cont.innerHTML = `<div class="vacio sans">Aún no hay propuestas${articleId?' para este artículo':''}. ¡Sé la primera persona en proponer!</div>`; return; }
+
+  const ids = props.map(p=>p.id);
+  const [{data:votos},{data:comms}] = await Promise.all([
+    db.from('tc_votes').select('proposal_id,voter_key,value').in('proposal_id',ids),
+    db.from('tc_comments').select('*').in('proposal_id',ids).order('created_at')
+  ]);
+  const score = id => (votos||[]).filter(v=>v.proposal_id===id).reduce((s,v)=>s+v.value,0);
+  const miVoto = id => ((votos||[]).find(v=>v.proposal_id===id && v.voter_key===voterKey)||{}).value||0;
+  const cDe = id => (comms||[]).filter(c=>c.proposal_id===id);
+
+  props.sort((a,b)=>score(b.id)-score(a.id));
+  cont.innerHTML = props.map(p=>`
+    <div class="prop sans" data-id="${p.id}">
+      <div class="votos">
+        <button data-v="1" class="${miVoto(p.id)===1?'mio':''}" title="Apoyar">▲</button>
+        <div class="num">${score(p.id)}</div>
+        <button data-v="-1" class="${miVoto(p.id)===-1?'mio':''}" title="En contra">▼</button>
+      </div>
+      <div style="flex:1">
+        <div><span class="etiq ${p.kind==='derogacion'?'rojo':''}">${esc(p.kind)}</span>${!articleId?`<a href="#/articulo/${esc(p.article_id)}"><b>Art. ${esc(p.article_id)}</b></a>`:''}</div>
+        <h4>${esc(p.title)}</h4>
+        <div class="metap">por <b>${esc(p.author_name)}</b> · ${fmtFecha(p.created_at)} · estado: ${esc(p.status)}</div>
+        <div class="cuerpo">${esc(p.body)}</div>
+        <div class="comms">
+          ${cDe(p.id).map(c=>`<div class="c"><b>${esc(c.author_name)}:</b> ${esc(c.body)}</div>`).join('')}
+          <form class="fc" style="display:flex;gap:6px;margin-top:6px">
+            <input name="txt" maxlength="4000" minlength="2" required placeholder="Comentar…" style="flex:1;padding:6px 10px;border:1px solid var(--linea);border-radius:6px;font-size:.85rem">
+            <button class="btn mini" type="submit">Enviar</button>
+          </form>
+        </div>
+      </div>
+    </div>`).join('');
+
+  cont.querySelectorAll('.prop').forEach(el=>{
+    const id = el.dataset.id;
+    el.querySelectorAll('.votos button').forEach(b=>b.addEventListener('click', async ()=>{
+      await db.from('tc_votes').upsert({proposal_id:id, voter_key:voterKey, value:+b.dataset.v},{onConflict:'proposal_id,voter_key'});
+      cargarPropuestas(articleId, cont, badge);
+    }));
+    el.querySelector('.fc').addEventListener('submit', async ev=>{
+      ev.preventDefault();
+      const txt = ev.target.txt.value.trim(); if(!txt) return;
+      await db.from('tc_comments').insert({proposal_id:id, body:txt, author_name:nombreGuardado()||'Ciudadano/a'});
+      cargarPropuestas(articleId, cont, badge);
+    });
+  });
+}
+
+async function vistaPropuestas(){
+  app.innerHTML = `<div class="tarjeta">
+    <div class="miga sans">Inicio › Propuestas ciudadanas</div>
+    <h1 class="art-tit">Propuestas ciudadanas</h1>
+    <p class="art-tema">Las ideas del pueblo para mejorar nuestra Carta Magna, ordenadas por respaldo ciudadano.</p>
+    <div id="lista-props" style="margin-top:16px"><div class="spinner">Cargando propuestas…</div></div>
+  </div>`;
+  cargarPropuestas(null, document.getElementById('lista-props'), null);
+}
+
+function vistaAcerca(){
+  app.innerHTML = `<div class="tarjeta">
+    <div class="miga sans">Inicio › Acerca del proyecto</div>
+    <h1 class="art-tit">Acerca de tuConstitución.mx</h1>
+    <p style="margin:14px 0">tuConstitución.mx es una plataforma ciudadana e independiente que busca acercar la Constitución Política de los Estados Unidos Mexicanos a las personas y darles voz real en su evolución. Creemos que la Carta Magna no debe ser un documento lejano que sólo se reforma desde los órganos del Estado, sino un texto vivo que el pueblo conoce, discute y ayuda a perfeccionar.</p>
+    <h2 class="secc">Qué ofrece la plataforma</h2>
+    <p style="margin:12px 0">Una versión navegable del texto constitucional vigente sincronizada desde la fuente oficial; herramientas para proponer reformas, adiciones o derogaciones artículo por artículo; foros de discusión y votación para medir el respaldo ciudadano de cada idea; y un proceso de curaduría con especialistas para que las mejores propuestas lleguen, bien fundamentadas, a las y los representantes del Congreso de la Unión, quienes conservan la facultad constitucional de iniciativa y reforma (artículos 71 y 135).</p>
+    <h2 class="secc">Fuentes y rigor</h2>
+    <p style="margin:12px 0">Las reformas constitucionales sólo son oficiales cuando se publican en el <a href="https://www.dof.gob.mx/" target="_blank" rel="noopener">Diario Oficial de la Federación</a>. El texto consolidado vigente que usamos proviene de la <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">Biblioteca de Leyes de la Cámara de Diputados</a> (última reforma: ${esc(META.ultimaReforma)}). Cada artículo enlaza a su fuente, y ningún contenido de esta plataforma sustituye al texto oficial.</p>
+    <h2 class="secc">Hoja de ruta</h2>
+    <p style="margin:12px 0">Esta es la versión inicial. Próximamente: sincronización completa y automática de los 136 artículos y transitorios desde la fuente oficial, cuentas verificadas de usuario, curaduría por especialistas en cada materia, asistente de IA para redactar y fundamentar propuestas de reforma, comparador de versiones históricas de cada artículo, y mecanismos para canalizar formalmente las propuestas con mayor respaldo a las y los legisladores.</p>
+    <div class="fuentebox sans">¿Quieres sumarte como especialista, moderador o desarrollador? Este proyecto es del pueblo: escríbenos.</div>
+  </div>`;
+}
+
+/* ---------- buscador ---------- */
+const inp = document.getElementById('buscador'), sug = document.getElementById('sugeridos');
+inp.addEventListener('input', ()=>{
+  const q = inp.value.trim().toLowerCase();
+  if(!q){ sug.style.display='none'; return; }
+  const res = [];
+  if(/^\d+$/.test(q) && +q>=1 && +q<=136) res.push({n:+q, why:TEMAS[+q]||'Ir al artículo'});
+  const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const nq = norm(q);
+  for(const [n,t] of Object.entries(TEMAS)){
+    if(res.length>=8) break;
+    if(norm(t).includes(nq) && !res.some(r=>r.n===+n)) res.push({n:+n, why:t});
+  }
+  for(const [n,txt] of Object.entries(TEXTOS)){
+    if(res.length>=8) break;
+    const i = norm(txt).indexOf(nq);
+    if(i>=0 && !res.some(r=>r.n===+n)) res.push({n:+n, why:'…'+txt.slice(Math.max(0,i-30), i+60).replace(/\n/g,' ')+'…'});
+  }
+  sug.innerHTML = res.length
+    ? res.map(r=>`<a href="#/articulo/${r.n}"><b>Art. ${r.n}</b> — ${esc(r.why.slice(0,90))}</a>`).join('')
+    : '<a>Sin resultados en artículos cargados</a>';
+  sug.style.display='block';
+});
+document.addEventListener('click', e=>{ if(!e.target.closest('.buscawrap')) sug.style.display='none'; });
+sug.addEventListener('click', ()=>{ sug.style.display='none'; inp.value=''; });
+
+ruta();
+</script>
+</body>
+</html>
