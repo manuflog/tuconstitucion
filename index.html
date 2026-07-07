@@ -5,37 +5,62 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>tuConstitución.mx — La Constitución del pueblo, por y para el pueblo</title>
 <meta name="description" content="Plataforma ciudadana para leer, discutir y proponer mejoras a la Constitución Política de los Estados Unidos Mexicanos.">
+<meta name="theme-color" content="#0a7a54">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>(function(){var t=localStorage.getItem('tc_tema');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.setAttribute('data-tema','dark');})();</script>
 <style>
 :root{
-  --verde:#006847; --verde-osc:#00563b; --rojo:#ce1126; --oro:#c8a25f;
-  --tinta:#1f2328; --gris:#57606a; --linea:#e6e2d9; --papel:#fbf9f4; --blanco:#fff;
-  --nota:#8a7c5e; --fondo-nota:#f6f1e4;
-  /* acentos: educación (azul cálido) e ideas (ámbar) */
+  --verde:#0a7a54; --verde-osc:#00563b; --rojo:#d31f38; --oro:#bf9445;
+  --tinta:#191d23; --gris:#5a636e; --linea:#e6e2d9; --papel:#f7f5ef; --blanco:#ffffff;
+  --nota:#8a7c5e; --fondo-nota:#f2ede0;
   --edu:#2f6f9e; --edu-osc:#245a82; --edu-bg:#eef4fa;
-  --idea:#e07a3a; --idea-osc:#c1642a; --idea-bg:#fdf1e7;
+  --idea:#d9722f; --idea-osc:#bd5f23; --idea-bg:#fdf1e7;
   --verde-cl:#e7f2ec;
+  --header-bg:#00563b; --header-text:#ffffff;
+  --hero-a:#0a7a54; --hero-b:#00402c;
+  --sombra:rgba(20,25,30,.10); --sombra-fuerte:rgba(20,25,30,.18);
+  --f-display:'Space Grotesk',-apple-system,'Segoe UI',sans-serif;
+  --f-body:'Inter',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+html[data-tema="dark"]{
+  --verde:#34c48d; --verde-osc:#8fe8c4; --rojo:#ff5d70; --oro:#d8b877;
+  --tinta:#e7eaef; --gris:#98a2ae; --linea:#2a2f39; --papel:#0d1014; --blanco:#191d24;
+  --nota:#c2b189; --fondo-nota:#20242c;
+  --edu:#6fb4e6; --edu-osc:#a9d6f6; --edu-bg:#13202d;
+  --idea:#f0965a; --idea-osc:#f6b184; --idea-bg:#251a11;
+  --verde-cl:#14251e;
+  --header-bg:#0a0e12; --header-text:#eef2f0;
+  --hero-a:#0c3d2b; --hero-b:#081016;
+  --sombra:rgba(0,0,0,.45); --sombra-fuerte:rgba(0,0,0,.6);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Georgia,'Times New Roman',serif;color:var(--tinta);background:var(--papel);line-height:1.65}
+body{font-family:var(--f-body);color:var(--tinta);background:var(--papel);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,.logo,.display,.art-tit,.secc,.hero h1,.rep-head h3,.stat .n,.rank-score,.gauge .val{font-family:var(--f-display);letter-spacing:-.01em}
 a{color:var(--verde);text-decoration:none}
 a:hover{text-decoration:underline}
 button{font-family:inherit;cursor:pointer}
-.sans{font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+.sans{font-family:var(--f-body)}
+svg.ic{width:1em;height:1em;vertical-align:-.125em;flex:none}
+.icwrap{display:inline-flex;align-items:center;gap:.5em}
 
 /* Header */
-header{background:var(--verde);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-.hwrap{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:18px;padding:10px 20px;flex-wrap:wrap}
-.logo{font-size:1.35rem;font-weight:bold;color:#fff;white-space:nowrap}
+header{background:var(--header-bg);color:var(--header-text);position:sticky;top:0;z-index:50;box-shadow:0 2px 12px var(--sombra)}
+.hwrap{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 20px;flex-wrap:wrap}
+.logo{font-size:1.3rem;font-weight:700;color:var(--header-text);white-space:nowrap;display:inline-flex;align-items:center;gap:8px}
 .logo em{color:var(--oro);font-style:normal}
 .logo:hover{text-decoration:none}
 nav.main{display:flex;gap:4px;flex-wrap:wrap}
-nav.main a{color:#e8f2ee;padding:6px 12px;border-radius:6px;font-size:.92rem}
-nav.main a:hover{background:rgba(255,255,255,.12);text-decoration:none}
-nav.main a.act{background:rgba(255,255,255,.18);color:#fff}
-.buscawrap{margin-left:auto;position:relative;min-width:230px;flex:1;max-width:340px}
-.buscawrap input{width:100%;padding:8px 12px;border:none;border-radius:8px;font-size:.9rem;background:rgba(255,255,255,.94)}
-.sugeridos{position:absolute;top:105%;left:0;right:0;background:#fff;border:1px solid var(--linea);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.15);max-height:340px;overflow:auto;display:none;z-index:60}
-.sugeridos a{display:block;padding:9px 12px;border-bottom:1px solid #f0ede4;color:var(--tinta);font-size:.88rem}
+nav.main a{color:rgba(255,255,255,.82);padding:6px 12px;border-radius:8px;font-size:.9rem;font-weight:500;white-space:nowrap}
+nav.main a:hover{background:rgba(255,255,255,.12);text-decoration:none;color:#fff}
+nav.main a.act{background:rgba(255,255,255,.16);color:#fff}
+.tema-btn{background:rgba(255,255,255,.12);border:none;color:var(--header-text);width:36px;height:36px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.tema-btn:hover{background:rgba(255,255,255,.22)}
+.buscawrap{margin-left:auto;position:relative;min-width:200px;flex:1;max-width:320px}
+.buscawrap input{width:100%;padding:9px 12px;border:none;border-radius:9px;font-size:.9rem;background:rgba(255,255,255,.95);color:#1a1e23;font-family:var(--f-body)}
+.sugeridos{position:absolute;top:108%;left:0;right:0;background:var(--blanco);border:1px solid var(--linea);border-radius:10px;box-shadow:0 8px 28px var(--sombra-fuerte);max-height:340px;overflow:auto;display:none;z-index:60}
+.sugeridos a{display:block;padding:9px 12px;border-bottom:1px solid var(--linea);color:var(--tinta);font-size:.88rem}
 .sugeridos a b{color:var(--verde)}
 .sugeridos a:hover{background:var(--fondo-nota);text-decoration:none}
 
@@ -45,7 +70,7 @@ nav.main a.act{background:rgba(255,255,255,.18);color:#fff}
 @media(max-width:860px){.cols{grid-template-columns:1fr}}
 
 /* Sidebar */
-aside.indice{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:14px;position:sticky;top:70px;max-height:calc(100vh - 90px);overflow:auto}
+aside.indice{background:var(--blanco);border:1px solid var(--linea);border-radius:10px;padding:14px;position:sticky;top:70px;max-height:calc(100vh - 90px);overflow:auto}
 .tit-grp{margin-bottom:4px}
 .tit-grp>button{width:100%;text-align:left;background:none;border:none;padding:8px 6px;font-family:inherit;font-size:.9rem;font-weight:bold;color:var(--verde-osc);border-radius:6px;display:flex;justify-content:space-between;gap:6px}
 .tit-grp>button:hover{background:var(--fondo-nota)}
@@ -53,13 +78,13 @@ aside.indice{background:#fff;border:1px solid var(--linea);border-radius:10px;pa
 .cap-grp.open{display:block}
 .cap-nom{font-size:.78rem;color:var(--gris);padding:6px 4px 2px;font-style:italic}
 .arts{display:flex;flex-wrap:wrap;gap:4px;padding:4px}
-.arts a{display:inline-block;min-width:34px;text-align:center;padding:3px 6px;border:1px solid var(--linea);border-radius:6px;font-size:.8rem;color:var(--tinta);background:#fff}
+.arts a{display:inline-block;min-width:34px;text-align:center;padding:3px 6px;border:1px solid var(--linea);border-radius:6px;font-size:.8rem;color:var(--tinta);background:var(--blanco)}
 .arts a.tiene{border-color:var(--verde);color:var(--verde);font-weight:bold}
 .arts a.act{background:var(--verde);color:#fff;border-color:var(--verde)}
 .arts a:hover{text-decoration:none;border-color:var(--verde)}
 
 /* Article */
-.tarjeta{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:28px 32px}
+.tarjeta{background:var(--blanco);border:1px solid var(--linea);border-radius:10px;padding:28px 32px}
 @media(max-width:600px){.tarjeta{padding:18px}}
 .miga{font-size:.8rem;color:var(--gris);margin-bottom:10px}
 h1.art-tit{font-size:1.7rem;color:var(--verde-osc);margin-bottom:2px}
@@ -78,7 +103,7 @@ h1.art-tit{font-size:1.7rem;color:var(--verde-osc);margin-bottom:2px}
 .badge{display:inline-block;background:var(--rojo);color:#fff;border-radius:10px;font-size:.72rem;padding:1px 8px;margin-left:5px;vertical-align:2px}
 
 /* Proposals */
-.prop{border:1px solid var(--linea);border-radius:10px;padding:14px 16px;margin-bottom:12px;background:#fffdf9;display:flex;gap:14px}
+.prop{border:1px solid var(--linea);border-radius:10px;padding:14px 16px;margin-bottom:12px;background:var(--blanco);display:flex;gap:14px}
 .votos{display:flex;flex-direction:column;align-items:center;min-width:44px}
 .votos button{background:none;border:1px solid var(--linea);border-radius:6px;width:34px;height:28px;font-size:.9rem;color:var(--gris)}
 .votos button:hover{border-color:var(--verde);color:var(--verde)}
@@ -94,35 +119,36 @@ h1.art-tit{font-size:1.7rem;color:var(--verde-osc);margin-bottom:2px}
 .comms .c b{color:var(--verde-osc)}
 .btn{background:var(--verde);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:.92rem}
 .btn:hover{background:var(--verde-osc)}
-.btn.sec{background:#fff;color:var(--verde);border:1px solid var(--verde)}
+.btn.sec{background:var(--blanco);color:var(--verde);border:1px solid var(--verde)}
 .btn.mini{padding:4px 10px;font-size:.78rem}
-form.nueva{background:#fff;border:2px dashed var(--linea);border-radius:10px;padding:18px;margin-bottom:18px}
+form.nueva{background:var(--blanco);border:2px dashed var(--linea);border-radius:10px;padding:18px;margin-bottom:18px}
 form.nueva label{display:block;font-size:.82rem;color:var(--gris);margin:10px 0 3px}
-form.nueva input,form.nueva textarea,form.nueva select{width:100%;padding:9px;border:1px solid var(--linea);border-radius:7px;font-family:inherit;font-size:.9rem;background:#fff}
+form.nueva input,form.nueva textarea,form.nueva select{width:100%;padding:9px;border:1px solid var(--linea);border-radius:7px;font-family:inherit;font-size:.9rem;background:var(--blanco)}
 form.nueva textarea{min-height:110px}
 .aviso{font-size:.8rem;color:var(--gris);margin-top:8px}
 .vacio{color:var(--gris);font-style:italic;padding:14px 0}
 
 /* Home */
-.hero{background:linear-gradient(150deg,var(--verde) 0%,var(--verde-osc) 70%);color:#fff;border-radius:14px;padding:52px 40px;margin-bottom:26px;position:relative;overflow:hidden}
-.hero:before{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border:30px solid rgba(200,162,95,.25);border-radius:50%}
-.hero h1{font-size:2.3rem;line-height:1.2;max-width:640px;margin-bottom:14px}
+.hero{background:linear-gradient(150deg,var(--hero-a) 0%,var(--hero-b) 78%);color:#fff;border-radius:18px;padding:52px 40px;margin-bottom:26px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;right:-50px;top:-70px;width:250px;height:250px;border:2px solid rgba(200,162,95,.4);border-radius:50%}
+.hero:after{content:"";position:absolute;right:60px;top:40px;width:130px;height:130px;border:2px solid rgba(255,255,255,.16);transform:rotate(45deg)}
+.hero h1{font-size:2.4rem;line-height:1.12;max-width:660px;margin-bottom:14px;position:relative}
 .hero h1 em{color:var(--oro);font-style:normal}
 .hero p{max-width:600px;font-size:1.05rem;opacity:.94;margin-bottom:22px}
 @media(max-width:600px){.hero{padding:30px 22px}.hero h1{font-size:1.6rem}}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:26px 0}
-.stat{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:18px;text-align:center}
+.stat{background:var(--blanco);border:1px solid var(--linea);border-radius:10px;padding:18px;text-align:center}
 .stat .n{font-size:1.9rem;font-weight:bold;color:var(--verde-osc)}
 .stat .l{font-size:.82rem;color:var(--gris)}
 .pasos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:20px 0 30px}
-.paso{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:20px;border-top:4px solid var(--rojo)}
+.paso{background:var(--blanco);border:1px solid var(--linea);border-radius:10px;padding:20px;border-top:4px solid var(--rojo)}
 .paso:nth-child(2){border-top-color:var(--verde)}
 .paso:nth-child(3){border-top-color:var(--oro)}
 .paso h3{color:var(--verde-osc);margin-bottom:8px;font-size:1.02rem}
 .paso p{font-size:.9rem;color:var(--gris)}
 h2.secc{color:var(--verde-osc);margin:26px 0 12px;font-size:1.3rem;border-bottom:2px solid var(--oro);padding-bottom:6px;display:inline-block}
 .destacados{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
-.dest{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:16px;display:block;color:var(--tinta)}
+.dest{background:var(--blanco);border:1px solid var(--linea);border-radius:10px;padding:16px;display:block;color:var(--tinta)}
 .dest:hover{border-color:var(--verde);text-decoration:none;box-shadow:0 4px 12px rgba(0,104,71,.08)}
 .dest .anum{font-weight:bold;color:var(--rojo);font-size:.8rem;letter-spacing:.5px}
 .dest .atem{color:var(--verde-osc);font-weight:bold;margin:3px 0 6px}
@@ -141,7 +167,7 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .grafo-head h1{font-size:1.7rem;color:var(--verde-osc)}
 .grafo-head p{color:var(--gris);font-size:.9rem;max-width:640px;margin-top:4px}
 .grafo-ctrls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.grafo-ctrls label{display:inline-flex;align-items:center;gap:6px;font-size:.84rem;color:var(--tinta);background:#fff;border:1px solid var(--linea);border-radius:8px;padding:6px 10px}
+.grafo-ctrls label{display:inline-flex;align-items:center;gap:6px;font-size:.84rem;color:var(--tinta);background:var(--blanco);border:1px solid var(--linea);border-radius:8px;padding:6px 10px}
 .grafo-ctrls input[type=checkbox]{accent-color:var(--verde)}
 .grafo-box{position:relative;width:100%;height:70vh;min-height:460px;background:radial-gradient(circle at 50% 40%,#0d2a22 0%,#071a14 70%,#04110c 100%);border:1px solid var(--linea);border-radius:12px;overflow:hidden}
 .grafo-box canvas{display:block}
@@ -153,24 +179,24 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .grafo-info{position:absolute;bottom:12px;left:12px;right:12px;background:rgba(4,17,12,.82);color:#eafff5;border-radius:10px;padding:10px 14px;font-size:.82rem;display:none;pointer-events:none}
 .grafo-info b{color:var(--oro)}
 .grafo-stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-.grafo-stats .gs{background:#fff;border:1px solid var(--linea);border-radius:9px;padding:8px 14px;font-size:.82rem;color:var(--gris)}
+.grafo-stats .gs{background:var(--blanco);border:1px solid var(--linea);border-radius:9px;padding:8px 14px;font-size:.82rem;color:var(--gris)}
 .grafo-stats .gs b{color:var(--verde-osc);font-size:1.05rem;margin-right:4px}
 .grafo-hint{font-size:.8rem;color:var(--gris);margin-top:8px;font-style:italic}
 .btn.gbtn{padding:6px 12px;font-size:.82rem}
 
 /* Panel de relaciones en la página del artículo */
-.relbox{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:14px 16px;margin:14px 0}
+.relbox{background:var(--blanco);border:1px solid var(--linea);border-radius:10px;padding:14px 16px;margin:14px 0}
 .relbox h3{font-size:.9rem;color:var(--verde-osc);margin-bottom:8px}
 .relgrp{margin:7px 0;font-size:.85rem;color:var(--gris);display:flex;flex-wrap:wrap;gap:6px;align-items:baseline}
 .relgrp .rl{font-weight:bold;color:var(--tinta);min-width:132px}
-.chip{display:inline-block;padding:3px 9px;border:1px solid var(--verde);border-radius:20px;font-size:.8rem;color:var(--verde);background:#fff}
+.chip{display:inline-block;padding:3px 9px;border:1px solid var(--verde);border-radius:20px;font-size:.8rem;color:var(--verde);background:var(--blanco)}
 .chip:hover{background:var(--verde);color:#fff;text-decoration:none}
 .chip.tema{border-color:var(--oro);color:#8a6d1f;background:#fdf8ec}
 .chip.tema:hover{background:var(--oro);color:#3a2f14}
 .chip.gris{border-color:var(--linea);color:var(--gris)}
 
 /* Capa educativa — tarjeta "en pocas palabras" */
-.explica{border:1px solid #d6e6f2;border-radius:12px;padding:0;margin:14px 0 6px;overflow:hidden;background:#fff}
+.explica{border:1px solid #d6e6f2;border-radius:12px;padding:0;margin:14px 0 6px;overflow:hidden;background:var(--blanco)}
 .explica .ex-h{background:var(--edu-bg);padding:10px 16px;font-size:.82rem;font-weight:bold;color:var(--edu-osc);display:flex;align-items:center;gap:8px;border-bottom:1px solid #dfeaf4}
 .explica .ex-b{padding:14px 16px}
 .explica .ex-q{font-size:.74rem;text-transform:uppercase;letter-spacing:.6px;color:var(--edu);font-weight:bold;margin-bottom:3px}
@@ -181,7 +207,7 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .termino{border-bottom:2px dotted var(--edu);color:var(--edu-osc);cursor:help;font-weight:600}
 .term-pill{background:var(--edu-bg);border:1px solid #d6e6f2;color:var(--edu-osc);border-radius:16px;padding:3px 11px;font-size:.8rem;cursor:pointer}
 .term-pill:hover{background:var(--edu);color:#fff}
-.term-def{display:none;background:#fff;border:1px solid #d6e6f2;border-left:3px solid var(--edu);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:.86rem;color:#37424c;line-height:1.5}
+.term-def{display:none;background:var(--blanco);border:1px solid #d6e6f2;border-left:3px solid var(--edu);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:.86rem;color:#37424c;line-height:1.5}
 .term-def.open{display:block}
 .term-def b{color:var(--edu-osc)}
 .ex-pend{padding:14px 16px;font-size:.9rem;color:var(--gris);font-style:italic}
@@ -197,11 +223,11 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .reftl .rf b{color:var(--tinta)}
 
 /* Comunidad / momentum */
-.momento{background:linear-gradient(135deg,var(--idea-bg),#fff);border:1px solid #f0dcc8;border-radius:12px;padding:18px 20px;margin:22px 0}
+.momento{background:linear-gradient(135deg,var(--idea-bg),var(--blanco));border:1px solid #f0dcc8;border-radius:12px;padding:18px 20px;margin:22px 0}
 .momento h2{color:var(--idea-osc);font-size:1.15rem;margin-bottom:4px}
 .momento p.sub{color:var(--gris);font-size:.88rem;margin-bottom:14px}
 .debatidos{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-.debcard{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:14px;display:block;color:var(--tinta);position:relative}
+.debcard{background:var(--blanco);border:1px solid var(--linea);border-radius:10px;padding:14px;display:block;color:var(--tinta);position:relative}
 .debcard:hover{border-color:var(--idea);text-decoration:none;box-shadow:0 4px 14px rgba(224,122,58,.12)}
 .debcard .dnum{font-size:.74rem;font-weight:bold;color:var(--idea-osc);letter-spacing:.4px}
 .debcard .dtema{color:var(--verde-osc);font-weight:bold;margin:3px 0 8px;font-size:.95rem}
@@ -223,7 +249,7 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .btn.idea{background:var(--idea);color:#fff}
 .btn.idea:hover{background:var(--idea-osc)}
 .prompts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px}
-.prompts .pchip{background:#fff;border:1px solid #f0dcc8;color:var(--idea-osc);border-radius:18px;padding:6px 13px;font-size:.82rem;cursor:pointer}
+.prompts .pchip{background:var(--blanco);border:1px solid #f0dcc8;color:var(--idea-osc);border-radius:18px;padding:6px 13px;font-size:.82rem;cursor:pointer}
 .prompts .pchip:hover{background:var(--idea);color:#fff;border-color:var(--idea)}
 
 /* Análisis de impacto */
@@ -231,10 +257,10 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .hero.legis h1 em{color:#8fb4ff}
 .portal-grid{display:grid;grid-template-columns:1fr 340px;gap:22px;align-items:start}
 @media(max-width:920px){.portal-grid{grid-template-columns:1fr}}
-.card{background:#fff;border:1px solid var(--linea);border-radius:12px;padding:20px}
+.card{background:var(--blanco);border:1px solid var(--linea);border-radius:12px;padding:20px}
 .card h2{color:var(--verde-osc);font-size:1.15rem;margin-bottom:10px}
 .seg{display:inline-flex;border:1px solid var(--linea);border-radius:8px;overflow:hidden;margin-bottom:4px}
-.seg button{background:#fff;border:none;padding:7px 14px;font-size:.85rem;color:var(--gris)}
+.seg button{background:var(--blanco);border:none;padding:7px 14px;font-size:.85rem;color:var(--gris)}
 .seg button.act{background:var(--edu);color:#fff}
 .byo{border:1px solid #d6e6f2;background:var(--edu-bg);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:.86rem}
 .byo summary{cursor:pointer;font-weight:bold;color:var(--edu-osc);list-style:none}
@@ -246,7 +272,7 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .nudge{font-size:.82rem;color:var(--idea-osc);background:var(--idea-bg);border:1px solid #f0dcc8;border-radius:8px;padding:9px 12px;margin-top:10px}
 
 /* Reporte */
-.reporte{border:1px solid var(--linea);border-radius:12px;overflow:hidden;background:#fff}
+.reporte{border:1px solid var(--linea);border-radius:12px;overflow:hidden;background:var(--blanco)}
 .rep-head{background:linear-gradient(135deg,#243b6b,#16233f);color:#fff;padding:18px 20px}
 .rep-head h3{font-size:1.1rem;margin-bottom:4px}
 .rep-head .prov{font-size:.76rem;color:#b9c6e6;margin-top:6px}
@@ -278,25 +304,90 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .rank-item .rm{font-size:.76rem;color:var(--gris)}
 .trace{font-size:.78rem;color:var(--gris);background:var(--papel);border:1px dashed var(--linea);border-radius:8px;padding:10px 12px;margin-top:12px}
 .trace b{color:var(--verde-osc)}
+
+/* Ajustes de tema oscuro para acentos con fondos claros fijos */
+html[data-tema="dark"] .fuentebox{background:#1a2230;border-color:#2a3546;color:#b9c6d8}
+html[data-tema="dark"] .explica{border-color:#22333f}
+html[data-tema="dark"] .explica .ex-h{background:var(--edu-bg);border-color:#22333f}
+html[data-tema="dark"] .term-pill{background:var(--edu-bg);border-color:#22333f}
+html[data-tema="dark"] .byo{background:var(--edu-bg);border-color:#22333f}
+html[data-tema="dark"] .byo .warn,html[data-tema="dark"] .aviso.warn{background:#2a2410;border-color:#4a3f16;color:#e0cf9a}
+html[data-tema="dark"] .momento{background:linear-gradient(135deg,var(--idea-bg),var(--blanco));border-color:#3a2a1c}
+html[data-tema="dark"] .invita{background:var(--idea-bg);border-color:var(--idea)}
+html[data-tema="dark"] .pendiente{background:#2a2410;border-color:#4a3f16}
+html[data-tema="dark"] .prompts .pchip{background:var(--blanco);border-color:#3a2a1c}
+html[data-tema="dark"] .buscawrap input{background:#20242c;color:var(--tinta)}
+html[data-tema="dark"] .buscawrap input::placeholder{color:#7b8591}
+html[data-tema="dark"] .reporte,html[data-tema="dark"] .sect{border-color:var(--linea)}
+
+/* ---------- Responsive / móvil ---------- */
+@media(max-width:820px){
+  .hwrap{gap:10px;padding:9px 14px;position:relative}
+  .logo{font-size:1.12rem;order:1}
+  .tema-btn{order:2;margin-left:auto}
+  .buscawrap{order:3;flex-basis:100%;max-width:none;min-width:0}
+  nav.main{order:4;flex-basis:100%;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:2px;padding-bottom:2px;scrollbar-width:none}
+  nav.main::-webkit-scrollbar{display:none}
+  nav.main a{padding:6px 10px;font-size:.85rem}
+  .wrap{padding:16px 14px}
+  .hero{padding:30px 22px;border-radius:14px}
+  .hero h1{font-size:1.7rem}
+  .hero p{font-size:.98rem}
+  .hero .btn{display:inline-block;margin:4px 6px 0 0}
+  .cols{gap:16px}
+  aside.indice{position:static;max-height:none;order:2}
+  .cols>.tarjeta{order:1}
+  .tarjeta{padding:18px 16px}
+  h1.art-tit{font-size:1.4rem}
+  .portal-grid{gap:16px}
+  .portal-grid>aside{order:2}
+  .tabs{gap:2px;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{padding:9px 12px;font-size:.9rem;white-space:nowrap}
+  .sectores{grid-template-columns:1fr}
+  .debatidos{grid-template-columns:1fr}
+  .grafo-head{flex-direction:column;align-items:stretch}
+  .grafo-ctrls{justify-content:flex-start}
+  .grafo-box{height:64vh;min-height:380px}
+  .grafo-leyenda{max-width:160px;font-size:.68rem}
+  .rep-body{padding:16px 14px}
+  .stats{grid-template-columns:1fr 1fr}
+  footer .fwrap{grid-template-columns:1fr}
+  .byo .row{flex-direction:column}.byo .k{min-width:0}
+  .row2{flex-direction:column}
+}
+@media(max-width:420px){
+  .hero h1{font-size:1.45rem}
+  .stats{grid-template-columns:1fr 1fr}
+  .arts a{min-width:30px}
+}
 </style>
 </head>
 <body>
 
 <header>
   <div class="hwrap">
-    <a class="logo" href="#/">tu<em>Constitución</em>.mx</a>
+    <a class="logo" href="#/" aria-label="tuConstitución.mx inicio">
+      <svg class="marca" width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect x="2.5" y="2.5" width="27" height="27" rx="7" stroke="var(--oro)" stroke-width="2"/>
+        <circle cx="16" cy="16" r="7.5" stroke="currentColor" stroke-width="2"/>
+        <path d="M16 8.5 L22.5 20 H9.5 Z" stroke="var(--oro)" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      <span>tu<em>Constitución</em>.mx</span>
+    </a>
     <nav class="main sans">
       <a href="#/" data-nav="/">Inicio</a>
       <a href="#/constitucion" data-nav="/constitucion">La Constitución</a>
-      <a href="#/grafo" data-nav="/grafo">Grafo de relaciones</a>
+      <a href="#/grafo" data-nav="/grafo">Grafo</a>
       <a href="#/analisis" data-nav="/analisis">Análisis de impacto</a>
-      <a href="#/propuestas" data-nav="/propuestas">Propuestas ciudadanas</a>
-      <a href="#/acerca" data-nav="/acerca">Acerca del proyecto</a>
+      <a href="#/propuestas" data-nav="/propuestas">Ideas</a>
+      <a href="#/acerca" data-nav="/acerca">Acerca</a>
     </nav>
     <div class="buscawrap sans">
-      <input id="buscador" type="search" placeholder="Buscar artículo o tema… (ej. 27, educación)" autocomplete="off">
+      <input id="buscador" type="search" placeholder="Buscar artículo o tema…" autocomplete="off">
       <div class="sugeridos" id="sugeridos"></div>
     </div>
+    <button class="tema-btn" id="tema-btn" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema"></button>
   </div>
 </header>
 
@@ -334,6 +425,56 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 const META = window.CPEUM_META, EST = window.CPEUM_ESTRUCTURA,
       TEMAS = window.CPEUM_TEMAS, TEXTOS = window.CPEUM_TEXTOS;
 const app = document.getElementById('app');
+
+/* Hidrata en memoria los 136 artículos desde tc_articles (una sola vez) para
+   que el grafo, el buscador, el índice y las relaciones cubran todo el texto
+   vigente, no solo los estáticos. Sobrescribe/complementa los estáticos. */
+window.CPEUM_REFORMAS_DB = window.CPEUM_REFORMAS_DB || {};
+let _hidratado = null;
+function hidratarArticulos(){
+  if(_hidratado) return _hidratado;
+  _hidratado = (async () => {
+    try{
+      const { data } = await db.from('tc_articles').select('article_id,texto,reformas').limit(200);
+      (data||[]).forEach(a => {
+        if(a.texto) TEXTOS[a.article_id] = a.texto;
+        if(a.reformas) window.CPEUM_REFORMAS_DB[a.article_id] = a.reformas;
+      });
+    }catch(e){}
+    return true;
+  })();
+  return _hidratado;
+}
+
+/* ---------- iconografía geométrica ---------- */
+const ICO = {
+  idea:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"/>',
+  link:'<circle cx="7" cy="7" r="3.4"/><circle cx="17" cy="17" r="3.4"/><line x1="9.4" y1="9.4" x2="14.6" y2="14.6"/>',
+  historia:'<rect x="4" y="5" width="16" height="3" rx="1.2"/><rect x="4" y="10.5" width="16" height="3" rx="1.2"/><rect x="4" y="16" width="10" height="3" rx="1.2"/>',
+  trend:'<path d="M12 4 L20.5 19 H3.5 Z"/>',
+  config:'<path d="M12 2.6 L20.1 7.3 V16.7 L12 21.4 L3.9 16.7 V7.3 Z"/>',
+  bolt:'<path d="M13 3 L5 13 H11 L10.5 21 L19 10.5 H12.5 Z"/>',
+  spark:'<path d="M12 3 L13.8 10.2 L21 12 L13.8 13.8 L12 21 L10.2 13.8 L3 12 L10.2 10.2 Z"/>',
+  mas:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  sync:'<path d="M20 6.5 A8 8 0 1 0 21 12"/><path d="M20 3.2 V7 H16.2"/>',
+  doc:'<rect x="5" y="3" width="14" height="18" rx="2.2"/><line x1="8.5" y1="8" x2="15.5" y2="8"/><line x1="8.5" y1="12" x2="15.5" y2="12"/><line x1="8.5" y1="16" x2="12.6" y2="16"/>',
+  sol:'<circle cx="12" cy="12" r="4.3"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5 5l1.7 1.7M17.3 17.3L19 19M19 5l-1.7 1.7M6.7 17.3L5 19"/>',
+  luna:'<path d="M20.5 14.8 A8.2 8.2 0 1 1 9.6 3.9 a6.6 6.6 0 0 0 10.9 10.9 Z"/>',
+};
+function ic(name, cls){ return `<svg class="ic ${cls||''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICO[name]||''}</svg>`; }
+
+/* ---------- tema claro / oscuro ---------- */
+function aplicarTema(t){
+  document.documentElement.setAttribute('data-tema', t);
+  try{ localStorage.setItem('tc_tema', t); }catch(e){}
+  const btn=document.getElementById('tema-btn'); if(btn) btn.innerHTML = ic(t==='dark'?'sol':'luna');
+  const mc=document.querySelector('meta[name=theme-color]'); if(mc) mc.setAttribute('content', t==='dark'?'#0a0e12':'#00563b');
+}
+(function(){
+  const cur = document.documentElement.getAttribute('data-tema')==='dark'?'dark':'light';
+  const btn=document.getElementById('tema-btn');
+  if(btn){ btn.innerHTML=ic(cur==='dark'?'sol':'luna'); btn.addEventListener('click',()=>aplicarTema(document.documentElement.getAttribute('data-tema')==='dark'?'light':'dark')); }
+})();
 
 /* identidad ligera del visitante (para votos) */
 let voterKey = localStorage.getItem('tc_voter');
@@ -423,7 +564,7 @@ async function vistaInicio(){
   </div>
 
   <div class="momento sans" id="momento" style="display:none">
-    <h2>🔥 Lo que la comunidad está debatiendo</h2>
+    <h2>${ic('trend')} Lo que la comunidad está debatiendo</h2>
     <p class="sub">Los artículos donde más ideas están surgiendo ahora mismo.</p>
     <div class="debatidos" id="debatidos"></div>
     <h2 style="font-size:1.02rem;margin:18px 0 4px;color:var(--verde-osc)">Actividad reciente</h2>
@@ -431,7 +572,7 @@ async function vistaInicio(){
   </div>
 
   <div class="invita sans" id="invita" style="display:none">
-    <h4>✨ Sé de las primeras voces</h4>
+    <h4>${ic('spark')} Sé de las primeras voces</h4>
     <p>Todavía nadie ha compartido una idea. Elige un artículo que te importe y propón cómo lo mejorarías: así empieza todo.</p>
     <a class="btn idea sans" href="#/constitucion">Elegir un artículo</a>
   </div>
@@ -498,7 +639,7 @@ function vistaConstitucion(){
     <div class="miga sans">Inicio › La Constitución</div>
     <h1 class="art-tit">${esc(META.nombre)}</h1>
     <p class="art-tema">Publicada en el ${esc(META.publicacion)} · Última reforma ${esc(META.ultimaReforma)}</p>
-    <div class="fuentebox sans">📜 Texto sincronizado desde la fuente oficial: <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">${esc(META.fuenteOficialNombre)}</a>. Los artículos marcados en verde ya cuentan con texto completo en la plataforma; el resto enlaza al <a href="${META.textoVigentePdf}" target="_blank" rel="noopener">PDF oficial</a> mientras se completa la sincronización.</div>
+    <div class="fuentebox sans">${ic('doc')} Texto sincronizado desde la fuente oficial: <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">${esc(META.fuenteOficialNombre)}</a>. Los artículos marcados en verde ya cuentan con texto completo en la plataforma; el resto enlaza al <a href="${META.textoVigentePdf}" target="_blank" rel="noopener">PDF oficial</a> mientras se completa la sincronización.</div>
     <p>La Constitución se organiza en <b>nueve Títulos</b> que agrupan sus <b>136 artículos</b>, más los artículos transitorios de cada decreto de reforma. Usa el índice para navegar por Títulos y Capítulos, o el buscador para llegar directo a un artículo o tema.</p>
     <h2 class="secc">Empieza por aquí</h2>
     <div class="destacados sans">
@@ -557,6 +698,7 @@ async function vistaGrafo(){
   try{ await cargarForceGraph(); }
   catch(e){ box.innerHTML = `<div class="errbox sans" style="margin:16px">${esc(e.message)} Revisa tu conexión e inténtalo de nuevo.</div>`; return; }
 
+  await hidratarArticulos();   // asegura los 136 artículos (texto real) en el grafo
   const propsByArt = await propuestasPorArticulo();
 
   function leyendaHTML(){
@@ -565,7 +707,7 @@ async function vistaGrafo(){
     <b style="margin-top:7px">Relaciones</b>
     <div class="li"><span class="ln" style="border-color:#3fbf8f"></span>Referencia en el texto →</div>
     <div class="li"><span class="ln" style="border-color:#9c8f66;opacity:.6"></span>Tema compartido</div>
-    <div class="li"><span class="dot" style="background:#fff;border:2px solid #3fbf8f"></span>Con texto completo</div>
+    <div class="li"><span class="dot" style="background:var(--blanco);border:2px solid #3fbf8f"></span>Con texto completo</div>
     <div class="li"><span class="dot" style="background:#3a4a44"></span>Pendiente de sincronizar</div>`;
   }
 
@@ -598,7 +740,7 @@ async function vistaGrafo(){
     .width(box.clientWidth).height(box.clientHeight)
     .nodeLabel(n => n.tipo==='tema'
       ? `<div style="font:600 13px sans-serif;color:#3a2f14;background:#fdf8ec;padding:4px 8px;border-radius:6px">${esc(n.label)}</div>`
-      : `<div style="font:13px sans-serif;background:#fff;color:#1f2328;padding:5px 9px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.3)"><b style="color:#006847">Art. ${n.art}</b>${n.tema?' — '+esc(n.tema):''}<br><span style="color:#57606a;font-size:11px">${esc(n.titulo)}${n.tiene?'':' · pendiente'}${n.props?' · '+n.props+' propuesta(s)':''}</span></div>`)
+      : `<div style="font:13px sans-serif;background:var(--blanco);color:#1f2328;padding:5px 9px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.3)"><b style="color:#006847">Art. ${n.art}</b>${n.tema?' — '+esc(n.tema):''}<br><span style="color:#57606a;font-size:11px">${esc(n.titulo)}${n.tiene?'':' · pendiente'}${n.props?' · '+n.props+' propuesta(s)':''}</span></div>`)
     .nodeColor(n => n.tipo==='tema' ? n.color : (n.tiene? n.color : dim(n.color)))
     .nodeVal('val')
     .nodeOpacity(0.92)
@@ -655,7 +797,7 @@ function relacionesHTML(n){
   if(R.entrantes.length) filas += `<div class="relgrp"><span class="rl">← Le remiten estos</span>${R.entrantes.map(chipArt).join('')}</div>`;
   if(R.temas.length) filas += `<div class="relgrp"><span class="rl">Temas transversales</span>${R.temas.map(t=>`<span class="chip tema">${esc(t)}</span>`).join('')}</div>`;
   return `<div class="relbox sans">
-    <h3>🔗 Relaciones de este artículo</h3>
+    <h3>${ic('link')} Relaciones de este artículo</h3>
     ${filas}
     <div style="margin-top:10px"><a class="btn mini sec sans" href="#/grafo">Ver en el grafo de relaciones →</a></div>
   </div>`;
@@ -696,10 +838,10 @@ function reformasDeTexto(txt){
 }
 
 function explicaHTML(A){
-  if(!A.simple) return `<div class="explica"><div class="ex-h">💡 En pocas palabras</div><div class="ex-pend">La explicación en lenguaje sencillo de este artículo está en camino. Mientras tanto, puedes leer el texto oficial y proponer ideas para mejorarlo.</div></div>`;
+  if(!A.simple) return `<div class="explica"><div class="ex-h">${ic('idea')} En pocas palabras</div><div class="ex-pend">La explicación en lenguaje sencillo de este artículo está en camino. Mientras tanto, puedes leer el texto oficial y proponer ideas para mejorarlo.</div></div>`;
   const terms = (A.terminos||[]).map(t=>`<span class="term-pill" data-def="${esc(t.definicion||'')}">${esc(t.term)}</span>`).join('');
   return `<div class="explica">
-    <div class="ex-h">💡 En pocas palabras</div>
+    <div class="ex-h">${ic('idea')} En pocas palabras</div>
     <div class="ex-b">
       <div class="ex-q">¿Qué dice?</div>
       <div class="ex-simple">${esc(A.simple)}</div>
@@ -724,7 +866,7 @@ function reformasHTML(A){
   const iso=f=>{const[d,m,y]=f.split('-');return y+m+d;};
   arr.sort((a,b)=>iso(a)<iso(b)?-1:1);
   const items=arr.map(f=>`<div class="rf">Reforma publicada en el <b>DOF ${esc(f)}</b></div>`).join('');
-  return `<details class="reformas sans"><summary>📜 Este artículo se ha modificado ${arr.length} ${arr.length===1?'vez':'veces'} — ver su historia</summary>
+  return `<details class="reformas sans"><summary>${ic('historia')} Este artículo se ha modificado ${arr.length} ${arr.length===1?'vez':'veces'} — ver su historia</summary>
     <div class="reftl">${items}</div>
     <p class="aviso" style="margin-top:6px">Cada fecha es un decreto de reforma publicado en el Diario Oficial de la Federación. Lo que lees arriba es la versión vigente tras todos esos cambios.</p>
   </details>`;
@@ -751,14 +893,14 @@ async function vistaArticulo(n){
     </div>
     <div id="tab-texto">
       ${relacionesHTML(n)}
-      ${texto ? `${reformasHTML(A)}<div class="fuentebox sans">📜 Texto oficial vigente (última reforma ${esc(META.ultimaReforma)}) · Fuente: <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">Cámara de Diputados, Leyes Biblio</a></div>`+
-        `${A.fromDB?'<div class="aviso sans" style="margin:-4px 0 8px;color:var(--verde)">↺ Sincronizado automáticamente desde la fuente oficial.</div>':''}`+`
+      ${texto ? `${reformasHTML(A)}<div class="fuentebox sans">${ic('doc')} Texto oficial vigente (última reforma ${esc(META.ultimaReforma)}) · Fuente: <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">Cámara de Diputados, Leyes Biblio</a></div>`+
+        `${A.fromDB?`<div class="aviso sans" style="margin:-4px 0 8px;color:var(--verde)">${ic('sync')} Sincronizado automáticamente desde la fuente oficial.</div>`:''}`+`
         <div class="texto">${renderTexto(texto)}</div>`
       : `<div class="pendiente sans"><b>Texto en proceso de sincronización.</b><br>El texto íntegro y vigente de este artículo está disponible en la fuente oficial mientras completamos la incorporación verificada de los 136 artículos.<br><br><a class="btn" href="${META.textoVigentePdf}" target="_blank" rel="noopener">Leer Artículo ${n} en el PDF oficial (Cámara de Diputados)</a></div>
         <p class="aviso sans">Aun sin el texto en plataforma, ya puedes crear y votar propuestas sobre este artículo en la pestaña «Debate e ideas».</p>`}
     </div>
     <div id="tab-props" style="display:none">
-      <button class="btn idea sans" id="btn-nueva">＋ Propón una mejora al Artículo ${n}</button>
+      <button class="btn idea sans" id="btn-nueva">${ic('mas')} Propón una mejora al Artículo ${n}</button>
       <div id="zona-form"></div>
       <div id="lista-props" style="margin-top:16px"><div class="spinner">Cargando propuestas…</div></div>
     </div>
@@ -786,7 +928,7 @@ function formPropuesta(articleId){
     'Me pregunto por qué este artículo no contempla…'
   ];
   z.innerHTML = `<form class="nueva sans">
-    <div style="font-size:.9rem;color:var(--idea-osc);font-weight:bold;margin-bottom:2px">✨ Tu idea cuenta. No necesitas ser experta o experto.</div>
+    <div style="font-size:.9rem;color:var(--idea-osc);font-weight:bold;margin-bottom:2px">${ic('spark')} Tu idea cuenta. No necesitas ser experta o experto.</div>
     <div style="font-size:.84rem;color:var(--gris);margin-bottom:6px">Empieza con una de estas ideas o escribe la tuya:</div>
     <div class="prompts" style="justify-content:flex-start;margin-bottom:4px">
       ${arrancadores.map(a=>`<span class="pchip" data-arr="${esc(a)}">${esc(a)}</span>`).join('')}
@@ -826,7 +968,7 @@ async function cargarPropuestas(articleId, cont, badge){
   if(error){ cont.innerHTML = `<div class="errbox sans">No se pudieron cargar las propuestas: ${esc(error.message)}</div>`; return; }
   if(badge) badge.textContent = props.length;
   if(!props.length){ cont.innerHTML = `<div class="invita sans">
-    <h4>✨ Este espacio está esperando tu idea</h4>
+    <h4>${ic('spark')} Este espacio está esperando tu idea</h4>
     <p>Nadie ha propuesto una mejora${articleId?' para este artículo':''} todavía. Las grandes reformas empiezan con una persona que se anima a decir «¿y si lo hiciéramos mejor?». Esa persona puedes ser tú.</p>
     ${articleId?`<button class="btn idea sans" onclick="document.getElementById('btn-nueva').click()">Ser la primera voz</button>`:`<a class="btn idea sans" href="#/constitucion">Elegir un artículo para proponer</a>`}
   </div>`; return; }
@@ -941,7 +1083,7 @@ async function vistaAnalisis(){
           </div>
 
           <details class="byo" ${b.key?'open':''}>
-            <summary>⚙️ Usar mi propia API key (uso intensivo, sin límite)</summary>
+            <summary>${ic('config')} Usar mi propia API key (uso intensivo, sin límite)</summary>
             <p style="margin:8px 0;color:#40607f">Para análisis largos o muchas consultas, usa tu propia cuenta. Tu llave se envía cifrada para esta consulta y <b>no se guarda en el servidor</b>; solo queda en esta pestaña.</p>
             <div class="row">
               <select name="byo_provider" class="prov">
@@ -956,14 +1098,14 @@ async function vistaAnalisis(){
           </details>
 
           <div id="nudge-zona"></div>
-          <div style="margin-top:14px"><button class="btn idea" type="submit">⚡ Generar análisis de impacto</button></div>
+          <div style="margin-top:14px"><button class="btn idea" type="submit">${ic('bolt')} Generar análisis de impacto</button></div>
         </form>
       </div>
       <div id="resultado" style="margin-top:18px"></div>
     </div>
     <aside>
       <div class="card">
-        <h2>🔥 Reformas más impactantes</h2>
+        <h2>${ic('trend')} Reformas más impactantes</h2>
         <p style="font-size:.84rem;color:var(--gris);margin-bottom:6px">Ordenadas por el impacto estimado de su análisis. Lo relevante sube; el ruido baja.</p>
         <div id="ranking"><div class="spinner">Cargando…</div></div>
       </div>
@@ -1031,12 +1173,12 @@ async function enviarAnalisis(ev, getKind){
       if(info.suggest_byo) throw new Error(info.message||'Alcanzaste el límite diario. Usa tu propia API key para continuar.');
       throw new Error(info.error||e2.message||'No se pudo generar el análisis.');
     }
-    btn.disabled=false; btn.textContent='⚡ Generar análisis de impacto';
+    btn.disabled=false; btn.textContent='Generar análisis de impacto';
     res.innerHTML = reporteHTML(data.analysis, reform, data.cached);
     res.scrollIntoView({behavior:'smooth', block:'start'});
     cargarRanking();
   }catch(err){
-    btn.disabled=false; btn.textContent='⚡ Generar análisis de impacto';
+    btn.disabled=false; btn.textContent='Generar análisis de impacto';
     res.innerHTML = `<div class="errbox sans">${esc(err.message)}</div>`;
   }
 }
@@ -1075,7 +1217,7 @@ function reporteHTML(a, reform, cached){
         ${(r.fuentes&&r.fuentes.length)?'<br><b>Fuentes citadas:</b> '+esc(r.fuentes.join(', ')):''}
         <br><span style="color:var(--gris)">Este análisis es informativo y no sustituye asesoría jurídica ni el proceso legislativo formal (arts. 71 y 135).</span>
       </div>
-      ${reform.author_role==='legislador'?`<div style="margin-top:12px"><button class="btn sec sans" onclick="alert('Próximamente: exportar como proyecto de decreto e iniciativa lista para el Congreso.')">📄 Preparar para el Congreso</button></div>`:''}
+      ${reform.author_role==='legislador'?`<div style="margin-top:12px"><button class="btn sec sans" onclick="alert('Próximamente: exportar como proyecto de decreto e iniciativa lista para el Congreso.')">${ic('doc')} Preparar para el Congreso</button></div>`:''}
     </div>
   </div>`;
 }
@@ -1148,6 +1290,7 @@ inp.addEventListener('input', ()=>{
 document.addEventListener('click', e=>{ if(!e.target.closest('.buscawrap')) sug.style.display='none'; });
 sug.addEventListener('click', ()=>{ sug.style.display='none'; inp.value=''; });
 
+hidratarArticulos();   // carga en segundo plano los 136 artículos (buscador, índice, grafo)
 ruta();
 </script>
 </body>
