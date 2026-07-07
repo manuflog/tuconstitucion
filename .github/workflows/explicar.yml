@@ -1,0 +1,38 @@
+name: Explicaciones en lenguaje sencillo (Haiku)
+
+# DORMIDO hasta que exista el secreto ANTHROPIC_API_KEY.
+# Genera las explicaciones de los artículos marcados explainer_stale=true.
+# Se puede lanzar a mano, y corre cada lunes 30 min después de la ingesta.
+
+on:
+  workflow_dispatch:
+    inputs:
+      all:
+        description: 'Procesar TODOS los pendientes (si no, solo un lote)'
+        type: boolean
+        default: false
+  schedule:
+    - cron: '30 9 * * 1'
+
+jobs:
+  explicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verificar que exista la llave de IA
+        run: |
+          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            echo "ANTHROPIC_API_KEY no configurada — el paso de explicaciones está en pausa."
+            exit 0
+          fi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r scripts/requirements.txt
+      - name: Generar explicaciones
+        if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/explicar_cpeum.py ${{ github.event.inputs.all == 'true' && '--all' || '--limit 30' }}
