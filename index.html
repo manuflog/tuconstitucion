@@ -606,17 +606,50 @@ function relacionesHTML(n){
   </div>`;
 }
 
-function explicaHTML(n){
-  const E = window.CPEUM_EXPLICA && CPEUM_EXPLICA[n];
-  if(!E) return `<div class="explica"><div class="ex-h">💡 En pocas palabras</div><div class="ex-pend">La explicación en lenguaje sencillo de este artículo está en camino. Mientras tanto, puedes leer el texto oficial y proponer ideas para mejorarlo.</div></div>`;
-  const terms = (E.terminos||[]).map(t=>`<span class="term-pill" data-term="${esc(t)}">${esc(t)}</span>`).join('');
+/* Normaliza un artículo mezclando la BD (tc_articles) con los datos estáticos.
+   La BD (ingesta automática) tiene prioridad; si no hay fila o viene vacía,
+   se usa el respaldo estático incluido en el sitio. */
+const _artCache = {};
+async function resolverArticulo(n){
+  if(_artCache[n]!==undefined) return _artCache[n];
+  let db=null;
+  try{
+    const { data } = await db_from_articulo(n);
+    if(data && data.length) db = data[0];
+  }catch(e){}
+  const estE = (window.CPEUM_EXPLICA && CPEUM_EXPLICA[n]) || null;
+  const estTerms = estE ? (estE.terminos||[]).map(t=>({term:t, definicion:(window.CPEUM_GLOSARIO||{})[t]||''})) : [];
+  const A = {
+    n,
+    texto: (db && db.texto) ? db.texto : (TEXTOS[n]||''),
+    reformas: (db && db.reformas && db.reformas.length) ? db.reformas : reformasDeTexto(TEXTOS[n]||''),
+    simple: (db && db.simple) ? db.simple : (estE?estE.simple:''),
+    importa: (db && db.importa) ? db.importa : (estE?estE.importa:''),
+    terminos: (db && db.terminos && db.terminos.length) ? db.terminos : estTerms,
+    fromDB: !!(db && db.texto)
+  };
+  _artCache[n]=A;
+  return A;
+}
+function db_from_articulo(n){
+  return db.from('tc_articles').select('texto,reformas,simple,importa,terminos').eq('article_id', n);
+}
+function reformasDeTexto(txt){
+  const fechas=new Set();
+  (txt||'').split('\n').forEach(l=>{ if(/DOF|reformad|adicionad|derogad|Fe de erratas/i.test(l)){ (l.match(/\d{2}-\d{2}-\d{4}/g)||[]).forEach(d=>fechas.add(d)); }});
+  return [...fechas];
+}
+
+function explicaHTML(A){
+  if(!A.simple) return `<div class="explica"><div class="ex-h">💡 En pocas palabras</div><div class="ex-pend">La explicación en lenguaje sencillo de este artículo está en camino. Mientras tanto, puedes leer el texto oficial y proponer ideas para mejorarlo.</div></div>`;
+  const terms = (A.terminos||[]).map(t=>`<span class="term-pill" data-def="${esc(t.definicion||'')}">${esc(t.term)}</span>`).join('');
   return `<div class="explica">
     <div class="ex-h">💡 En pocas palabras</div>
     <div class="ex-b">
       <div class="ex-q">¿Qué dice?</div>
-      <div class="ex-simple">${esc(E.simple)}</div>
+      <div class="ex-simple">${esc(A.simple)}</div>
       <div class="ex-q">¿Por qué te importa?</div>
-      <div class="ex-importa">${esc(E.importa)}</div>
+      <div class="ex-importa">${esc(A.importa)}</div>
       ${terms?`<div class="ex-terminos"><span class="lb">Términos clave</span>${terms}</div><div class="term-def" id="term-def"></div>`:''}
     </div>
   </div>`;
@@ -624,19 +657,15 @@ function explicaHTML(n){
 function wireTerminos(){
   const def = document.getElementById('term-def');
   if(!def) return;
-  const G = window.CPEUM_GLOSARIO || {};
   document.querySelectorAll('.term-pill').forEach(p=>p.addEventListener('click',()=>{
-    const t = p.dataset.term;
+    const t = p.textContent, d = p.dataset.def || 'Definición no disponible.';
     if(def.dataset.cur===t && def.classList.contains('open')){ def.classList.remove('open'); def.dataset.cur=''; return; }
-    def.innerHTML = `<b>${esc(t)}:</b> ${esc(G[t]||'Definición no disponible.')}`;
+    def.innerHTML = `<b>${esc(t)}:</b> ${esc(d)}`;
     def.classList.add('open'); def.dataset.cur=t;
   }));
 }
-function reformasHTML(n){
-  const txt = TEXTOS[n]; if(!txt) return '';
-  const fechas=new Set();
-  txt.split('\n').forEach(l=>{ if(/DOF|reformad|adicionad|derogad|Fe de erratas/i.test(l)){ (l.match(/\d{2}-\d{2}-\d{4}/g)||[]).forEach(d=>fechas.add(d)); }});
-  const arr=[...fechas]; if(!arr.length) return '';
+function reformasHTML(A){
+  const arr=(A.reformas||[]).slice(); if(!arr.length) return '';
   const iso=f=>{const[d,m,y]=f.split('-');return y+m+d;};
   arr.sort((a,b)=>iso(a)<iso(b)?-1:1);
   const items=arr.map(f=>`<div class="rf">Reforma publicada en el <b>DOF ${esc(f)}</b></div>`).join('');
@@ -648,7 +677,9 @@ function reformasHTML(n){
 
 async function vistaArticulo(n){
   if(n<1||n>136){ location.hash='#/constitucion'; return; }
-  const cap = capDe(n), texto = TEXTOS[n];
+  const cap = capDe(n);
+  const A = await resolverArticulo(n);
+  const texto = A.texto;
   app.innerHTML = `<div class="cols">${sidebarHTML(n)}
   <div class="tarjeta">
     <div class="miga sans"><a href="#/constitucion">La Constitución</a> › ${esc(cap.titulo.split('—')[0].trim())} ${cap.nombre?'› '+esc(cap.nombre.split('—')[0].trim()):''}</div>
@@ -658,14 +689,15 @@ async function vistaArticulo(n){
       <a class="btn mini sec sans" href="#/articulo/${n-1}" ${n<=1?'style="visibility:hidden"':''}>← Art. ${n-1}</a>
       <a class="btn mini sec sans" href="#/articulo/${n+1}" ${n>=136?'style="visibility:hidden"':''}>Art. ${n+1} →</a>
     </div>
-    ${explicaHTML(n)}
+    ${explicaHTML(A)}
     <div class="tabs sans">
       <button class="act" data-tab="texto">Texto vigente</button>
       <button data-tab="props">Debate e ideas <span class="badge" id="nprops">…</span></button>
     </div>
     <div id="tab-texto">
       ${relacionesHTML(n)}
-      ${texto ? `${reformasHTML(n)}<div class="fuentebox sans">📜 Texto oficial vigente (última reforma ${esc(META.ultimaReforma)}) · Fuente: <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">Cámara de Diputados, Leyes Biblio</a></div>
+      ${texto ? `${reformasHTML(A)}<div class="fuentebox sans">📜 Texto oficial vigente (última reforma ${esc(META.ultimaReforma)}) · Fuente: <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">Cámara de Diputados, Leyes Biblio</a></div>`+
+        `${A.fromDB?'<div class="aviso sans" style="margin:-4px 0 8px;color:var(--verde)">↺ Sincronizado automáticamente desde la fuente oficial.</div>':''}`+`
         <div class="texto">${renderTexto(texto)}</div>`
       : `<div class="pendiente sans"><b>Texto en proceso de sincronización.</b><br>El texto íntegro y vigente de este artículo está disponible en la fuente oficial mientras completamos la incorporación verificada de los 136 artículos.<br><br><a class="btn" href="${META.textoVigentePdf}" target="_blank" rel="noopener">Leer Artículo ${n} en el PDF oficial (Cámara de Diputados)</a></div>
         <p class="aviso sans">Aun sin el texto en plataforma, ya puedes crear y votar propuestas sobre este artículo en la pestaña «Debate e ideas».</p>`}
