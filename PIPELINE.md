@@ -65,3 +65,18 @@ python scripts/ingest_cpeum.py --dry-run    # descarga y parsea, sin escribir en
 - Texto vigente (PDF): https://www.diputados.gob.mx/LeyesBiblio/pdf/CPEUM.pdf
 - Reformas por artículo: https://www.diputados.gob.mx/LeyesBiblio/ref/cpeum_art.htm
 - Publicación oficial de reformas: Diario Oficial de la Federación (https://www.dof.gob.mx)
+
+## Explicaciones automáticas (activas desde 2026-07-07)
+
+Ya no dependen de GitHub Actions: la Edge Function `explicar-articulos` (Supabase)
+usa el secreto `ANTHROPIC_API_KEY` ya configurado y un cron en Postgres
+(`pg_cron` + `pg_net`) la invoca a diario a las 06:30 UTC (job `tc-explicar-articulos`,
+lote de 12). Solo procesa artículos con `explainer_stale=true`, así que tras una
+reforma semanal se explican solos y el resto del tiempo es un no-op sin costo.
+El workflow `explicar.yml` queda como respaldo manual.
+
+## Pregúntale a la Constitución
+
+Edge Function `preguntar-articulo`: Q&A por artículo (Haiku) con contexto del texto
+oficial + artículos referenciados. Límite de 10 preguntas/día por visitante
+(contador `voter_key|qa` en `tc_ai_usage`); llave propia (BYO) lo omite.

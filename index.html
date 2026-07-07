@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- build: rebrand-2 -->
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -210,6 +211,20 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .term-def{display:none;background:var(--blanco);border:1px solid #d6e6f2;border-left:3px solid var(--edu);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:.86rem;color:#37424c;line-height:1.5}
 .term-def.open{display:block}
 .term-def b{color:var(--edu-osc)}
+/* pregúntale a la constitución */
+.pregunta{border:1px solid #d6e6f2;border-radius:12px;margin:10px 0 6px;background:var(--blanco)}
+.pregunta summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:.9rem;color:var(--edu-osc);list-style:none;display:flex;align-items:center;gap:8px}
+.pregunta summary::-webkit-details-marker{display:none}
+.pregunta .preg-b{padding:0 14px 12px}
+.preg-row{display:flex;gap:8px}
+.preg-row input{flex:1;border:1px solid #c9d9e8;border-radius:8px;padding:9px 12px;font-size:.9rem;background:var(--blanco);color:inherit}
+.preg-item{margin-top:12px;font-size:.88rem}
+.preg-q{font-weight:600;color:var(--edu-osc);margin-bottom:4px}
+.preg-a{background:#f4f8fc;border:1px solid #e1ecf5;border-radius:8px;padding:10px 12px;line-height:1.55;color:#37424c}
+.preg-meta{margin-top:8px;font-size:.76rem;color:var(--gris)}
+html[data-tema="dark"] .pregunta{border-color:#22333f}
+html[data-tema="dark"] .preg-a{background:#101d27;border-color:#22333f;color:#c7d4de}
+html[data-tema="dark"] .preg-row input{border-color:#2a3d4b}
 .ex-pend{padding:14px 16px;font-size:.9rem;color:var(--gris);font-style:italic}
 
 /* Historia de reformas */
@@ -861,6 +876,29 @@ function wireTerminos(){
     def.classList.add('open'); def.dataset.cur=t;
   }));
 }
+function wirePregunta(n){
+  const box=document.getElementById('pregunta-box'); if(!box) return;
+  const inp=document.getElementById('preg-inp'), btn=document.getElementById('preg-btn'), hist=document.getElementById('preg-hist');
+  async function enviar(){
+    const q=inp.value.trim(); if(q.length<5){ inp.focus(); return; }
+    btn.disabled=true; btn.textContent='Pensando…';
+    const item=document.createElement('div'); item.className='preg-item';
+    item.innerHTML=`<div class="preg-q">${esc(q)}</div><div class="preg-a">Consultando el texto oficial…</div>`;
+    hist.prepend(item);
+    try{
+      const body={ article_id:n, question:q, voter_key:voterKey };
+      const b=byoGuardado(); if(b.provider==='anthropic'&&b.key) body.byo={provider:b.provider,key:b.key,model:b.model||undefined};
+      const { data, error } = await db.functions.invoke('preguntar-articulo',{ body });
+      if(error){ let info={}; try{ info=await error.context.json(); }catch(_){}; throw new Error(info.message||info.error||error.message||'No se pudo responder.'); }
+      const rel=(data.related&&data.related.length)?` · Relacionados: ${data.related.map(x=>`<a href="#/articulo/${+x}">Art. ${+x}</a>`).join(', ')}`:'';
+      item.querySelector('.preg-a').innerHTML = esc(data.answer).replace(/\n/g,'<br>') + `<div class="preg-meta">Con base en el texto oficial del Art. ${n}${rel} · Respuesta de IA, informativa.</div>`;
+      inp.value='';
+    }catch(err){ item.querySelector('.preg-a').innerHTML=`<span style="color:#c0392b">${esc(err.message)}</span>`; }
+    btn.disabled=false; btn.textContent='Preguntar';
+  }
+  btn.addEventListener('click',enviar);
+  inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); enviar(); } });
+}
 function reformasHTML(A){
   const arr=(A.reformas||[]).slice(); if(!arr.length) return '';
   const iso=f=>{const[d,m,y]=f.split('-');return y+m+d;};
@@ -887,6 +925,14 @@ async function vistaArticulo(n){
       <a class="btn mini sec sans" href="#/articulo/${n+1}" ${n>=136?'style="visibility:hidden"':''}>Art. ${n+1} →</a>
     </div>
     ${explicaHTML(A)}
+    ${texto?`<details class="pregunta sans" id="pregunta-box">
+      <summary>${ic('spark')} Pregúntale a la Constitución sobre este artículo</summary>
+      <div class="preg-b">
+        <p class="aviso" style="margin:4px 0 10px">Responde con base en el texto oficial vigente y sus artículos relacionados. Es informativa; no es asesoría legal.</p>
+        <div class="preg-row"><input id="preg-inp" maxlength="600" placeholder="Ej. ¿Qué significa este artículo en mi vida diaria?"><button class="btn mini sans" id="preg-btn" type="button">Preguntar</button></div>
+        <div id="preg-hist"></div>
+      </div>
+    </details>`:''}
     <div class="tabs sans">
       <button class="act" data-tab="texto">Texto vigente</button>
       <button data-tab="props">Debate e ideas <span class="badge" id="nprops">…</span></button>
@@ -907,6 +953,7 @@ async function vistaArticulo(n){
   </div></div>`;
   wireSidebar();
   wireTerminos();
+  wirePregunta(n);
 
   document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('act'));
@@ -1183,7 +1230,61 @@ async function enviarAnalisis(ev, getKind){
   }
 }
 
+const _tcRep={};
+window.tcCongreso = function(id){
+  const d=_tcRep[id]; if(!d) return;
+  const {a,reform}=d, r=a.report||{};
+  const fecha=new Date().toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});
+  const artTxt = reform.target_article?`el artículo ${+reform.target_article}`:'diversas disposiciones';
+  const propuesto=(reform.proposed_text||'').trim();
+  const ol = arr => (arr&&arr.length)?`<ol>${arr.map(x=>`<li class="just">${esc(String(x))}</li>`).join('')}</ol>`:'';
+  const html=`<!doctype html><html lang="es"><head><meta charset="utf-8">
+<title>Iniciativa — ${esc(reform.title)}</title>
+<style>
+body{font-family:'Times New Roman',Georgia,serif;max-width:760px;margin:40px auto;padding:0 24px;line-height:1.75;color:#111;background:#fff}
+h1{font-size:1.02rem;text-align:center;text-transform:uppercase;line-height:1.5;margin:26px 0}
+h2{font-size:.96rem;margin-top:30px;text-align:center;text-transform:uppercase}
+.right{text-align:right}.just{text-align:justify}
+.decreto{white-space:pre-wrap;border-left:3px solid #888;padding-left:16px;margin:14px 0}
+.firma{margin-top:70px;text-align:center}
+.nota{margin-top:44px;border-top:1px solid #999;padding-top:10px;font-size:.78rem;color:#555;font-family:Arial,Helvetica,sans-serif;line-height:1.5}
+.toolbar{position:fixed;top:10px;right:10px;font-family:Arial;display:flex;gap:6px}
+.toolbar button{padding:7px 12px;cursor:pointer}
+@media print{.toolbar,.nota{display:none}body{margin:0;max-width:none}}
+</style></head><body>
+<div class="toolbar"><button onclick="window.print()">Imprimir / guardar PDF</button><button id="dl">Descargar .doc</button></div>
+<p class="right">A ${esc(fecha)}.</p>
+<h1>Iniciativa con proyecto de decreto por el que se reforma ${esc(artTxt)} de la Constitución Política de los Estados Unidos Mexicanos</h1>
+<p class="just">Quien suscribe, <b>${esc(reform.author_name)}</b> (${esc(reform.author_role)}), con fundamento en lo dispuesto por los artículos 71 y 135 de la Constitución Política de los Estados Unidos Mexicanos, somete a consideración la presente iniciativa con proyecto de decreto, al tenor de la siguiente:</p>
+<h2>Exposición de motivos</h2>
+<p class="just"><b>I. Planteamiento.</b> ${esc(reform.body)}</p>
+${r.resumen_sencillo?`<p class="just"><b>II. Síntesis.</b> ${esc(r.resumen_sencillo)}</p>`:''}
+${r.que_cambia?`<p class="just"><b>III. Alcance de la reforma.</b> ${esc(r.que_cambia)}</p>`:''}
+${(r.consideraciones&&r.consideraciones.length)?`<p class="just"><b>IV. Consideraciones.</b></p>${ol(r.consideraciones)}`:''}
+${(r.riesgos_constitucionales&&r.riesgos_constitucionales.length)?`<p class="just"><b>V. Riesgos identificados y salvaguardas.</b></p>${ol(r.riesgos_constitucionales)}`:''}
+${(r.precedentes&&r.precedentes.length)?`<p class="just"><b>VI. Antecedentes.</b></p>${ol(r.precedentes)}`:''}
+<h2>Proyecto de decreto</h2>
+<p class="just"><b>ÚNICO.</b> Se reforma ${esc(artTxt)} de la Constitución Política de los Estados Unidos Mexicanos, para quedar como sigue:</p>
+${propuesto?`<div class="decreto just">${esc(propuesto)}</div>`:`<p class="just" style="color:#666">[La redacción específica del texto propuesto se definirá durante la dictaminación, conforme a la exposición de motivos.]</p>`}
+<h2>Transitorios</h2>
+<p class="just"><b>PRIMERO.</b> El presente decreto entrará en vigor el día siguiente al de su publicación en el Diario Oficial de la Federación.</p>
+<p class="just"><b>SEGUNDO.</b> Se derogan todas las disposiciones que se opongan al presente decreto.</p>
+<div class="firma"><p>Atentamente</p><br><br><p><b>${esc(reform.author_name)}</b></p></div>
+<div class="nota"><b>Borrador ciudadano</b> generado en tuConstitución.mx a partir del análisis de impacto v${a.version} (${esc(a.provider||'')}/${esc(a.model||'')}, puntaje ${Math.round(a.impact_score||0)}/100). No es un documento oficial: la facultad de iniciativa corresponde a los sujetos del artículo 71 constitucional y el procedimiento de reforma al artículo 135. Revísese con asesoría parlamentaria antes de su presentación.</div>
+</body></html>`;
+  const w=window.open('','_blank');
+  if(!w){ alert('Tu navegador bloqueó la ventana. Permite ventanas emergentes para exportar.'); return; }
+  w.document.write(html); w.document.close();
+  const wire=()=>{ const b=w.document.getElementById('dl'); if(!b) return;
+    b.onclick=()=>{ const blob=new Blob(['﻿'+html],{type:'application/msword'});
+      const aEl=w.document.createElement('a'); aEl.href=URL.createObjectURL(blob);
+      aEl.download=`iniciativa${reform.target_article?'-art-'+reform.target_article:''}-tuconstitucion.doc`;
+      w.document.body.appendChild(aEl); aEl.click(); aEl.remove(); }; };
+  if(w.document.readyState==='complete') wire(); else w.addEventListener('load',wire);
+};
+
 function reporteHTML(a, reform, cached){
+  _tcRep[reform.id]={a,reform};
   const r=a.report||{};
   const li = arr => (arr&&arr.length)?`<ul>${arr.map(x=>`<li>${esc(String(x))}</li>`).join('')}</ul>`:'<p class="vacio">—</p>';
   const sect = (r.impacto_por_sector||[]).map(s=>{
@@ -1217,7 +1318,7 @@ function reporteHTML(a, reform, cached){
         ${(r.fuentes&&r.fuentes.length)?'<br><b>Fuentes citadas:</b> '+esc(r.fuentes.join(', ')):''}
         <br><span style="color:var(--gris)">Este análisis es informativo y no sustituye asesoría jurídica ni el proceso legislativo formal (arts. 71 y 135).</span>
       </div>
-      ${reform.author_role==='legislador'?`<div style="margin-top:12px"><button class="btn sec sans" onclick="alert('Próximamente: exportar como proyecto de decreto e iniciativa lista para el Congreso.')">${ic('doc')} Preparar para el Congreso</button></div>`:''}
+      <div style="margin-top:12px"><button class="btn sec sans" onclick="tcCongreso('${esc(String(reform.id))}')">${ic('doc')} ${reform.author_role==='legislador'?'Preparar iniciativa para el Congreso':'Exportar como proyecto de decreto (borrador)'}</button></div>
     </div>
   </div>`;
 }
@@ -1259,7 +1360,7 @@ function vistaAcerca(){
     <h2 class="secc">Fuentes y rigor</h2>
     <p style="margin:12px 0">Las reformas constitucionales sólo son oficiales cuando se publican en el <a href="https://www.dof.gob.mx/" target="_blank" rel="noopener">Diario Oficial de la Federación</a>. El texto consolidado vigente que usamos proviene de la <a href="${META.fuenteOficialUrl}" target="_blank" rel="noopener">Biblioteca de Leyes de la Cámara de Diputados</a> (última reforma: ${esc(META.ultimaReforma)}). Cada artículo enlaza a su fuente, y ningún contenido de esta plataforma sustituye al texto oficial.</p>
     <h2 class="secc">Hoja de ruta</h2>
-    <p style="margin:12px 0">Ya disponibles: explicaciones en lenguaje sencillo, grafo de relaciones entre artículos, y espacio de ideas ciudadanas. Próximamente: explicaciones para los 136 artículos, sincronización completa del texto oficial, cuentas verificadas de usuario, curaduría por especialistas en cada materia, un asistente de IA para responder dudas sobre cada artículo y ayudar a fundamentar propuestas, análisis de impacto de cada idea sobre los artículos relacionados, y mecanismos para canalizar formalmente ante las y los legisladores las propuestas con mayor respaldo.</p>
+    <p style="margin:12px 0">Ya disponibles: los 136 artículos sincronizados automáticamente desde la fuente oficial y explicados en lenguaje sencillo, el grafo de relaciones entre artículos, el espacio de ideas ciudadanas, el análisis de impacto legislativo con IA, el asistente «Pregúntale a la Constitución» en cada artículo, y la exportación de propuestas como proyecto de decreto. Próximamente: cuentas verificadas de usuario, curaduría por especialistas en cada materia, y mecanismos para canalizar formalmente ante las y los legisladores las propuestas con mayor respaldo.</p>
     <div class="fuentebox sans">¿Quieres sumarte como especialista, moderador o desarrollador? Este proyecto es del pueblo: escríbenos.</div>
   </div>`;
 }
