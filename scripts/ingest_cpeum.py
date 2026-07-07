@@ -55,8 +55,11 @@ ANOT = re.compile(
 RE_TITULO = re.compile(r'^Título\s+[A-ZÁÉÍÓÚ]', re.I)
 RE_CAP = re.compile(r'^Capítulo\s+[IVXLC]+', re.I)
 RE_SECCION = re.compile(r'^Sección\s+[IVXLC]+', re.I)
-RE_ART = re.compile(r'^Artículo\s+(\d+)(?:o\.|°|º|\.|\s)', re.I)
-RE_TRANS = re.compile(r'^(Transitorio|Artículos?\s+Transitorios?)', re.I)
+# OJO: sensible a mayúsculas a propósito. Los encabezados reales de artículo
+# son "Artículo 1o." (capitalizado). Las referencias dentro de decretos usan
+# "artículo 3o." (minúscula) o "ARTÍCULO" (mayúsculas): NO deben confundirse.
+RE_ART = re.compile(r'^Artículo\s+(\d+)(?:o\.|°|º|\.|\s)')
+RE_TRANS = re.compile(r'^(Transitorio|Artículos?\s+Transitorios?|T\s*R\s*A\s*N\s*S\s*I\s*T)', re.I)
 
 # Mobiliario de página que se repite en cada hoja del PDF
 FURNITURE = re.compile(
@@ -144,6 +147,8 @@ def split_articles(paras):
     titulo = capitulo = ""
     body = []
     want_name = None   # 'titulo' | 'capitulo' cuando esperamos su nombre en la línea siguiente
+    maxnum = 0         # último número de artículo aceptado (deben ir 1,2,3,… en orden)
+    done = False       # true al llegar a los transitorios tras el artículo 136
 
     def commit():
         if cur is not None:
@@ -151,18 +156,30 @@ def split_articles(paras):
             structure[cur] = (titulo, capitulo)
 
     for p in paras:
+        if done:
+            break
         if RE_TITULO.match(p):
             titulo = p; capitulo = ""; want_name = 'titulo'; continue
         if RE_CAP.match(p) or RE_SECCION.match(p):
             capitulo = p; want_name = 'capitulo'; continue
         if RE_TRANS.match(p):
-            commit(); cur = None; want_name = None; continue   # no capturamos transitorios
+            # los transitorios y decretos de reforma vienen DESPUÉS del art. 136:
+            # al toparnos con ellos (ya cerca del final), dejamos de capturar.
+            commit()
+            if maxnum >= 130:
+                done = True
+            cur = None; want_name = None; continue
         m = RE_ART.match(p)
         if m:
-            commit(); want_name = None
-            cur = int(m.group(1))
-            body = [p]
-        elif want_name and cur is None and not ANOT.match(p):
+            num = int(m.group(1))
+            if num == maxnum + 1:            # encabezado real de artículo (secuencial)
+                commit(); want_name = None
+                cur = num; maxnum = num
+                body = [p]
+            elif cur is not None:            # "Artículo N" fuera de secuencia = texto del artículo actual
+                body.append(p)
+            continue
+        if want_name and cur is None and not ANOT.match(p):
             # nombre del Título/Capítulo (línea de texto que sigue al encabezado)
             if want_name == 'titulo' and 'Título' not in p:
                 titulo = f"{titulo} — {p}"
@@ -319,6 +336,11 @@ Artículo reformado DOF 14-08-2001
 Artículo 2o. La Nación Mexicana es única e indivisible, basada en la grandeza de sus pueblos y
 culturas.
 Párrafo reformado DOF 30-09-2024
+Transitorios
+Primero. El presente Decreto entrará en vigor al día siguiente de su publicación.
+Artículo Segundo. Se reforma el
+artículo 1o. de la Constitución Política de los Estados Unidos Mexicanos, para quedar como sigue:
+Artículo 27o. Texto de decreto que NO debe convertirse en el artículo 27 real.
 """
 
 SAMPLE_HTML = """
@@ -350,6 +372,10 @@ def selftest():
           a1[-1] == "Artículo reformado DOF 14-08-2001")
     check("art.2 no absorbe el mobiliario de página",
           not any("CÁMARA DE DIPUTADOS" in p for p in arts[2].split("\n")))
+    check("los decretos/transitorios tras los artículos NO crean artículos falsos",
+          27 not in arts and 5 not in arts and set(arts) == {1, 2})
+    check("art.1 no fue sobrescrito por una referencia de decreto",
+          arts[1].split("\n")[-1] == "Artículo reformado DOF 14-08-2001")
     refs = parse_reformas(SAMPLE_HTML)
     check("reformas art.1 = [14-08-2001, 04-12-2006, 10-06-2011]",
           refs.get(1) == ["14-08-2001", "04-12-2006", "10-06-2011"])
