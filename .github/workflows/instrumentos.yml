@@ -1,0 +1,27 @@
+name: Ingesta catálogo federal (pirámide Fase 1)
+
+# Mantiene tc_instruments y tc_relations (declaradas) al día con el índice
+# oficial de LeyesBiblio. Corre cada lunes y se puede lanzar a mano.
+
+on:
+  schedule:
+    - cron: '30 9 * * 1'     # lunes 09:30 UTC (después de la ingesta CPEUM)
+  workflow_dispatch:
+
+jobs:
+  instrumentos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar dependencias
+        run: pip install requests
+      - name: Probar el parser (self-test)
+        run: python scripts/ingest_instrumentos.py --selftest
+      - name: Ingerir catálogo
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scripts/ingest_instrumentos.py
