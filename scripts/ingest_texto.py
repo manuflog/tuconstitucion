@@ -40,16 +40,40 @@ PRIORIDAD = ["cnpp", "cpf", "lamp", "lft", "lgs", "ccf", "cff", "lge",
 SUFIJOS = (r"Bis|Ter|Qu[áa]ter|Quinquies|Quintus|Sexies|Sextus|Septies|"
            r"Septimus|Octies|Octavus|Nonies|Decies|Undecies|Duodecies")
 
-# Encabezado de artículo. Grupos: 1=número, 2=letra (17-A), 3=sufijo latino,
-# 4=número del sufijo (47 Bis 1). Sensible a mayúsculas: los encabezados
-# reales van capitalizados ("Artículo 5o.") — las referencias en texto
-# corrido usan minúscula y no arrancan línea.
-RE_ART = re.compile(
-    r"^Artículo\s+(\d{1,4})(?:o\.)?"
+# Encabezados de artículo. Dos estilos reales en LeyesBiblio:
+#  - ordinal:  "Artículo 1o. ...", "Artículo 4o.- ...", "Artículo 4o.-C."
+#    (el punto del ordinal ya cuenta como puntuación de cierre)
+#  - estándar: "Artículo 10.", "Artículo 17-A.-", "Artículo 47 Bis 1."
+# "Artículo"/"ARTÍCULO" capitalizados: las referencias en texto corrido usan
+# minúscula y no arrancan línea tras el reflow.
+_ART = r"^(?:Artículo|ART[ÍI]CULO)\s+"
+RE_ART_ORD = re.compile(
+    _ART + r"(\d{1,2})o\.(?:\s*-\s*([A-ZÑ])(?=[\.\s]))?")
+RE_ART_STD = re.compile(
+    _ART + r"(\d{1,4})"
     r"(?:\s*-\s*([A-ZÑ]))?"
     r"(?:\s+(" + SUFIJOS + r"))?"
     r"(?:\s+(\d{1,2}))?"
-    r"\s*[\.\-–—]", )
+    r"\s*[\.\-–—:]", )
+
+
+def match_art(ln: str):
+    """→ (num:int, key:str) si la línea es encabezado de artículo, si no None."""
+    m = RE_ART_ORD.match(ln)
+    if m:
+        key = m.group(1) + (("-" + m.group(2)) if m.group(2) else "")
+        return int(m.group(1)), key
+    m = RE_ART_STD.match(ln)
+    if m:
+        key = m.group(1)
+        if m.group(2):
+            key += "-" + m.group(2)
+        if m.group(3):
+            key += " " + m.group(3)
+        if m.group(4):
+            key += " " + m.group(4)
+        return int(m.group(1)), key
+    return None
 
 RE_TITULO = re.compile(r"^T[ÍI]TULO\s+", re.I)
 RE_CAP = re.compile(r"^CAP[ÍI]TULO\s+", re.I)
@@ -74,7 +98,7 @@ def clean_lines(raw: str):
     """Mobiliario genérico: líneas cortas repetidas ≥5 veces (encabezados de
     página con el nombre de la ley, cámara, secretarías) + paginación."""
     lines = [l.strip() for l in raw.split("\n")]
-    freq = Counter(l for l in lines if l and len(l) < 120 and not RE_ART.match(l))
+    freq = Counter(l for l in lines if l and len(l) < 120 and not match_art(l))
     furniture = {l for l, n in freq.items() if n >= 5 and not RE_FRAC.match(l)
                  and not RE_INC.match(l) and not l[0:1].islower()
                  and not RE_TRANS.match(l)}
@@ -94,7 +118,7 @@ def clean_lines(raw: str):
 
 def is_marker(ln: str) -> bool:
     return bool(RE_TITULO.match(ln) or RE_CAP.match(ln) or RE_SECCION.match(ln)
-                or RE_LIBRO.match(ln) or RE_ART.match(ln) or RE_TRANS.match(ln)
+                or RE_LIBRO.match(ln) or match_art(ln) or RE_TRANS.match(ln)
                 or ANOT.match(ln))
 
 
@@ -115,12 +139,12 @@ def reflow(lines):
     while i < len(lines):
         ln = lines[i]
         nxt = lines[i + 1] if i + 1 < len(lines) else ""
-        if ANOT.match(ln) and not RE_ART.match(ln):
+        if ANOT.match(ln) and not match_art(ln):
             flush(); paras.append(ln); i += 1; continue
         if (RE_TITULO.match(ln) or RE_CAP.match(ln) or RE_SECCION.match(ln)
                 or RE_LIBRO.match(ln) or RE_TRANS.match(ln)):
             flush(); paras.append(ln); i += 1; continue
-        if RE_ART.match(ln) and buf.strip():
+        if match_art(ln) and buf.strip():
             flush()
         starts_item = bool(RE_FRAC.match(ln) or RE_INC.match(ln))
         if starts_item and buf.strip():
@@ -134,18 +158,6 @@ def reflow(lines):
         i += 1
     flush()
     return paras
-
-
-def art_key_from(m) -> str:
-    """(12, None, 'Bis', '1') → '12 Bis 1'; (17,'A',None,None) → '17-A'."""
-    key = m.group(1)
-    if m.group(2):
-        key += "-" + m.group(2)
-    if m.group(3):
-        key += " " + m.group(3)
-    if m.group(4):
-        key += " " + m.group(4)
-    return key
 
 
 def split_articles(paras):
@@ -179,10 +191,9 @@ def split_articles(paras):
         if RE_SECCION.match(p):
             division = {**division, "seccion": p}
             continue
-        m = RE_ART.match(p)
+        m = match_art(p)
         if m:
-            num = int(m.group(1))
-            key = art_key_from(m)
+            num, key = m
             # encabezado real: número no-decreciente, salto acotado, clave nueva.
             # (las referencias "Artículo 14." en texto corrido no arrancan
             # párrafo tras el reflow, y suelen ser regresivas o repetidas)
@@ -231,13 +242,13 @@ def sb_headers():
             "Content-Type": "application/json"}
 
 
-def process_law(base, inst, dry=False):
+def process_law(base, inst, dry=False, force=False):
     import requests
     slug, iid, pdf_url = inst["slug"], inst["id"], inst["pdf_url"]
     print(f"→ {slug}: {inst['name'][:60]}")
     data = fetch_pdf(pdf_url)
     pdf_hash = hashlib.sha256(data).hexdigest()[:16]
-    if inst.get("content_hash") == pdf_hash:
+    if not force and inst.get("content_hash") == pdf_hash:
         print(f"  sin cambios (hash {pdf_hash}), omitida")
         return 0
     arts, ultima = parse_pdf_text(pdf_to_text(data))
@@ -299,10 +310,13 @@ línea partida por columna.
 Artículo 2 Bis. Variante bis.
 Artículo 2 Bis 1. Variante bis numerada.
 Artículo 3.- (Se deroga)
-Artículo 4o.- Con ordinal.
+Artículo 4o.- Con ordinal y guión.
+Artículo 4o.-C. Ordinal con letra.
+ARTÍCULO 4 Bis. Encabezado en mayúsculas.
 CÁMARA DE DIPUTADOS DEL H. CONGRESO DE LA UNIÓN
 LEY DEMO DEL PUEBLO
-Artículo 5. En términos del Artículo 1 de esta Ley se aplica lo siguiente:
+Artículo 5o. Ordinal con punto y espacio, estilo Ley de Amparo.
+Artículo 6. En términos del Artículo 1 de esta Ley se aplica lo siguiente:
 I. Primera fracción;
 II. Segunda fracción.
 Artículo 17-A.- Clave con letra.
@@ -321,7 +335,8 @@ CÁMARA DE DIPUTADOS DEL H. CONGRESO DE LA UNIÓN
 def selftest():
     arts, ultima = parse_pdf_text(SAMPLE)
     keys = [a["art_key"] for a in arts]
-    assert keys == ["1", "2", "2 Bis", "2 Bis 1", "3", "4", "5", "17-A"], keys
+    assert keys == ["1", "2", "2 Bis", "2 Bis 1", "3", "4", "4-C", "4 Bis",
+                    "5", "6", "17-A"], keys
     assert ultima == "01-02-2026", ultima
     a1 = arts[0]
     assert a1["division"]["titulo"].startswith("TÍTULO PRIMERO"), a1["division"]
@@ -333,9 +348,9 @@ def selftest():
     # solo hay 8 artículos (<5 no aplica el corte temprano): verificar que 90
     # no está porque el corte por TRANS ocurrió con len(arts)>=5.
     assert "90" not in keys
-    # la fracción quedó dentro del art. 5
-    a5 = next(a for a in arts if a["art_key"] == "5")
-    assert "Primera fracción" in a5["texto"]
+    # la fracción quedó dentro del art. 6
+    a6 = next(a for a in arts if a["art_key"] == "6")
+    assert "Primera fracción" in a6["texto"]
     print("selftest OK")
 
 
@@ -344,6 +359,7 @@ def main():
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--slugs", default="", help="coma-separado; default lote PRIORIDAD")
+    ap.add_argument("--force", action="store_true", help="reprocesar aunque el PDF no cambió")
     args = ap.parse_args()
     if args.selftest:
         selftest()
@@ -365,7 +381,7 @@ def main():
         if s not in found:
             continue
         try:
-            if process_law(base, found[s], dry=args.dry_run) < 0:
+            if process_law(base, found[s], dry=args.dry_run, force=args.force) < 0:
                 fails += 1
         except Exception as e:
             print(f"  ERROR {s}: {e}")
