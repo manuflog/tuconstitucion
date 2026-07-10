@@ -9,16 +9,17 @@
   const TEXTOS = window.CPEUM_TEXTOS || {};
 
   // ---- Paleta por Título (agrupación estructural) ----
+  // Escala de oros "Piedra y Oro" (piedra labrada de Mitla)
   const COLOR_TITULO = [
-    '#006847', // I  — Derechos humanos
-    '#0a7d5a', // II — Soberanía / territorio
-    '#c8a25f', // III— Poderes de la Unión
-    '#b5872f', // IV — Responsabilidades
-    '#ce1126', // V  — Estados y CDMX
-    '#8c1c2b', // VI — Trabajo
-    '#5b6f8c', // VII— Prevenciones generales
-    '#4a4a8a', // VIII—Reformas
-    '#6b5d3f'  // IX — Inviolabilidad
+    '#D9C177', // I  — Derechos humanos
+    '#B08D2E', // II — Soberanía / territorio
+    '#8A6D1F', // III— Poderes de la Unión
+    '#E4D194', // IV — Responsabilidades
+    '#C4A03C', // V  — Estados y CDMX
+    '#9C8130', // VI — Trabajo
+    '#75601C', // VII— Prevenciones generales
+    '#EADFB4', // VIII—Reformas
+    '#A68A3A'  // IX — Inviolabilidad
   ];
 
   // Índice artículo -> {titIdx, tituloNombre, capNombre}
@@ -41,20 +42,21 @@
 
   // ---- Temas transversales (juicio editorial; cruzan títulos) ----
   // Cada hub agrupa artículos por materia, más allá de su ubicación estructural.
+  // Oro para casi todos; verde y rojo reservados a dos hubs especiales.
   const TEMAS_HUB = [
-    { id: 'H_libertades', label: 'Libertades fundamentales', emoji: '🕊️', color: '#2e9e6b',
+    { id: 'H_libertades', label: 'Libertades fundamentales', emoji: '🕊️', color: '#4C9A72',
       arts: [1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 24] },
-    { id: 'H_justicia', label: 'Justicia y debido proceso', emoji: '⚖️', color: '#4472b8',
+    { id: 'H_justicia', label: 'Justicia y debido proceso', emoji: '⚖️', color: '#D9C177',
       arts: [13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 94, 97, 100, 102, 103, 105, 107] },
-    { id: 'H_democracia', label: 'Democracia y participación', emoji: '🗳️', color: '#c8a25f',
+    { id: 'H_democracia', label: 'Democracia y participación', emoji: '🗳️', color: '#B08D2E',
       arts: [34, 35, 36, 39, 40, 41, 116, 122, 135] },
-    { id: 'H_economia', label: 'Economía y propiedad', emoji: '💰', color: '#b5872f',
+    { id: 'H_economia', label: 'Economía y propiedad', emoji: '💰', color: '#8A6D1F',
       arts: [25, 26, 27, 28, 73, 123, 131] },
-    { id: 'H_poderes', label: 'Poderes de la Unión', emoji: '🏛️', color: '#9a5fb0',
+    { id: 'H_poderes', label: 'Poderes de la Unión', emoji: '🏛️', color: '#E4D194',
       arts: [49, 50, 73, 80, 89, 90, 94, 102] },
-    { id: 'H_federalismo', label: 'Federalismo y territorio', emoji: '🗺️', color: '#ce1126',
+    { id: 'H_federalismo', label: 'Federalismo y territorio', emoji: '🗺️', color: '#C25048',
       arts: [40, 42, 43, 115, 116, 117, 121, 122, 124] },
-    { id: 'H_sociales', label: 'Derechos sociales', emoji: '🤝', color: '#0a7d5a',
+    { id: 'H_sociales', label: 'Derechos sociales', emoji: '🤝', color: '#C4A03C',
       arts: [2, 3, 4, 27, 123] }
   ];
 
@@ -132,7 +134,7 @@
         tema: TEMAS[n] || '',
         titulo: info.titulo,
         capitulo: info.capitulo,
-        color: COLOR_TITULO[info.titIdx] || '#57606a',
+        color: COLOR_TITULO[info.titIdx] || '#6B6151',
         val: 1.4 + g * 0.9 + (tiene ? 1.1 : 0) + p * 0.7,
         grado: g,
         props: p
