@@ -214,6 +214,27 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .at-badge.parsed{border-color:var(--oro);color:var(--oro)}
 .at-badge.ai{border-color:var(--idea);color:var(--idea-osc)}
 
+/* Catálogo de leyes (#/leyes y #/ley/<slug>) */
+.leyes-filtros{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+.leyes-filtros input{flex:1;min-width:220px;padding:9px 12px;border:1px solid var(--linea);border-radius:8px;font-size:.9rem;font-family:var(--f-body);background:var(--blanco);color:var(--tinta)}
+.fchip{background:var(--blanco);border:1px solid var(--linea);color:var(--gris);border-radius:18px;padding:5px 13px;font-size:.82rem;cursor:pointer}
+.fchip:hover{border-color:var(--verde);color:var(--verde)}
+.fchip.act{background:var(--verde);border-color:var(--verde);color:#fff}
+.ley-item{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;padding:10px 2px;border-bottom:1px solid var(--linea);font-size:.92rem}
+.ley-item:last-child{border-bottom:none}
+.ley-item .ln{font-weight:600}
+.ley-item .lm,a.lm{font-size:.78rem;color:var(--gris)}
+a.lm{text-decoration:underline dotted;color:var(--verde)}
+.tipo-badge{display:inline-block;font-size:.68rem;padding:1px 8px;border-radius:10px;border:1px solid var(--linea);color:var(--gris);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.tipo-badge.n2{border-color:var(--verde);color:var(--verde)}
+.tipo-badge.n3{border-color:var(--edu);color:var(--edu)}
+.ley-art{border:1px solid var(--linea);border-radius:9px;margin:8px 0;background:var(--blanco)}
+.ley-art>summary{cursor:pointer;padding:9px 12px;font-weight:600;font-size:.9rem;color:var(--verde-osc);list-style:none;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 10px}
+.ley-art>summary::-webkit-details-marker{display:none}
+.ley-art>summary:hover{color:var(--verde)}
+.ley-art .la-b{padding:0 14px 12px}
+.ley-art .la-b p{margin:0 0 10px;font-size:.92rem}
+
 /* Capa educativa — tarjeta "en pocas palabras" */
 .explica{border:1px solid #d6e6f2;border-radius:12px;padding:0;margin:14px 0 6px;overflow:hidden;background:var(--blanco)}
 .explica .ex-h{background:var(--edu-bg);padding:10px 16px;font-size:.82rem;font-weight:bold;color:var(--edu-osc);display:flex;align-items:center;gap:8px;border-bottom:1px solid #dfeaf4}
@@ -411,6 +432,7 @@ html[data-tema="dark"] .reporte,html[data-tema="dark"] .sect{border-color:var(--
     <nav class="main sans">
       <a href="#/" data-nav="/">Inicio</a>
       <a href="#/constitucion" data-nav="/constitucion">La Constitución</a>
+      <a href="#/leyes" data-nav="/ley">Leyes</a>
       <a href="#/grafo" data-nav="/grafo">Grafo</a>
       <a href="#/analisis" data-nav="/analisis">Análisis de impacto</a>
       <a href="#/propuestas" data-nav="/propuestas">Ideas</a>
@@ -545,6 +567,9 @@ function ruta(){
   if(window._tcGraph && !h.startsWith('/grafo')){ try{ window._tcGraph.pauseAnimation(); window._tcGraph._destructor(); }catch(e){} window._tcGraph=null; }
   const mArt = h.match(/^\/articulo\/(\d+)/);
   if(mArt) return vistaArticulo(+mArt[1]);
+  const mLey = h.match(/^\/ley\/([^\/]+)/);
+  if(mLey) return vistaLey(decodeURIComponent(mLey[1]));
+  if(h.startsWith('/leyes')) return vistaLeyes();
   if(h.startsWith('/constitucion')) return vistaConstitucion();
   if(h.startsWith('/grafo')) return vistaGrafo();
   if(h.startsWith('/analisis')) return vistaAnalisis();
@@ -990,9 +1015,12 @@ async function pintarAterriza(n){
     return `<div class="at-nivel">${esc(NIVEL_LBL[lv]||'Otras normas')}</div>` + items.map(r=>{
       const i=r.inst, nom=i.short_name||i.name||'Norma', url=i.reform_history_url||i.official_url||i.pdf_url||'';
       const m=METODO_LBL[r.method]||{lbl:r.method,cls:''};
+      const nomHTML = i.slug ? `<a href="#/ley/${esc(i.slug)}">${esc(nom)}</a>`
+        : (url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(nom)}</a>` : esc(nom));
       return `<div class="at-item">
-        <span class="at-nom">${url?`<a href="${esc(url)}" target="_blank" rel="noopener">${esc(nom)}</a>`:esc(nom)}</span>
+        <span class="at-nom">${nomHTML}</span>
         ${i.last_reform_dof?`<span class="at-fecha">Última reforma: ${esc(fmtFechaDia(i.last_reform_dof))}</span>`:''}
+        ${i.slug&&url?`<a class="at-fecha" href="${esc(url)}" target="_blank" rel="noopener">fuente oficial ↗</a>`:''}
         <span class="at-badge ${m.cls}"${r.evidence?` title="${esc(r.evidence)}"`:''}>${esc(m.lbl)}</span>
       </div>`;
     }).join('');
@@ -1004,6 +1032,182 @@ async function pintarAterriza(n){
       ${cuerpo}
     </div>
   </details>`;
+}
+
+/* ---------- Catálogo de leyes (tc_instruments) ----------
+   La Constitución se desarrolla en leyes generales/nacionales (nivel 2),
+   federales y códigos (nivel 3)… Este catálogo las lista y cada una tiene
+   su propia página (#/ley/<slug>) con su fundamento constitucional. */
+const TIPO_LBL = {
+  constitucion:'Constitución', ley_general:'Ley general', ley_nacional:'Ley nacional',
+  codigo_nacional:'Código nacional', ley_federal:'Ley federal', codigo_federal:'Código federal',
+  ley_organica:'Ley orgánica', ley_reglamentaria:'Ley reglamentaria',
+  estatuto:'Estatuto', reglamento:'Reglamento', ordenanza:'Ordenanza'
+};
+const tipoLbl = t => TIPO_LBL[t] || (t ? String(t).replace(/_/g,' ').replace(/^./,c=>c.toUpperCase()) : 'Norma');
+const tipoBadge = i => `<span class="tipo-badge ${+i.level===2?'n2':+i.level===3?'n3':''}">${esc(tipoLbl(i.type))}</span>`;
+const normLey = s => String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+let _leyesCache = null;
+function cargarLeyes(){
+  if(_leyesCache) return _leyesCache;
+  _leyesCache = (async () => {
+    const { data, error } = await db.from('tc_instruments')
+      .select('slug,name,type,level,last_reform_dof,pdf_url,reform_history_url')
+      .eq('status','vigente').order('name').limit(500);
+    if(error){ _leyesCache = null; throw new Error(error.message); }
+    return data || [];
+  })();
+  return _leyesCache;
+}
+const LEY_FILTROS = [
+  {k:'todas', lbl:'Todas', test:()=>true},
+  {k:'gen', lbl:'Generales y Nacionales', test:i=>/general|nacional/.test(i.type||'')},
+  {k:'cod', lbl:'Códigos', test:i=>/codigo/.test(i.type||'')},
+  {k:'fed', lbl:'Federales', test:i=>/federal/.test(i.type||'')}
+];
+async function vistaLeyes(){
+  app.innerHTML = `<div class="tarjeta">
+    <div class="miga sans">Inicio › Leyes</div>
+    <h1 class="art-tit">Las leyes que desarrollan la Constitución</h1>
+    <p class="art-tema">La Constitución es la cúspide de la pirámide normativa: sus mandatos se desarrollan en leyes generales y nacionales (nivel 2), leyes federales y códigos (nivel 3), y así hasta aterrizar en tu vida diaria.</p>
+    <div class="leyes-filtros sans">
+      <input id="ley-q" type="search" placeholder="Buscar una ley por nombre…" autocomplete="off">
+      ${LEY_FILTROS.map((f,i)=>`<button class="fchip${i===0?' act':''}" type="button" data-f="${f.k}">${esc(f.lbl)}</button>`).join('')}
+    </div>
+    <div id="ley-lista" class="sans"><div class="spinner">Cargando el catálogo…</div></div>
+  </div>`;
+  let leyes;
+  try{ leyes = await cargarLeyes(); }
+  catch(e){
+    const z=document.getElementById('ley-lista');
+    if(z) z.innerHTML = `<div class="errbox sans">No se pudo cargar el catálogo: ${esc(e.message)}</div>`;
+    return;
+  }
+  const lista = document.getElementById('ley-lista'), q = document.getElementById('ley-q');
+  if(!lista || !q) return; // la vista cambió mientras cargaba
+  let filtro = LEY_FILTROS[0];
+  function pintar(){
+    const nq = normLey(q.value.trim());
+    const rows = leyes.filter(i => filtro.test(i) && (!nq || normLey(i.name).includes(nq)));
+    lista.innerHTML = rows.length
+      ? rows.map(i=>`<div class="ley-item">
+          <span class="ln"><a href="#/ley/${esc(i.slug)}">${esc(i.name)}</a></span>
+          ${tipoBadge(i)}
+          ${i.last_reform_dof?`<span class="lm">Última reforma: ${esc(fmtFechaDia(i.last_reform_dof))}</span>`:''}
+          ${i.pdf_url?`<a class="lm" href="${esc(i.pdf_url)}" target="_blank" rel="noopener">PDF oficial</a>`:''}
+          ${i.reform_history_url?`<a class="lm" href="${esc(i.reform_history_url)}" target="_blank" rel="noopener">historial de reformas</a>`:''}
+        </div>`).join('') + `<p class="aviso sans" style="margin-top:10px">${rows.length} de ${leyes.length} normas vigentes · Fuente: Cámara de Diputados, Leyes Biblio.</p>`
+      : `<div class="vacio">Ninguna ley coincide con tu búsqueda.</div>`;
+  }
+  q.addEventListener('input', pintar);
+  document.querySelectorAll('.leyes-filtros .fchip').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.leyes-filtros .fchip').forEach(x=>x.classList.remove('act'));
+    b.classList.add('act');
+    filtro = LEY_FILTROS.find(f=>f.k===b.dataset.f) || LEY_FILTROS[0];
+    pintar();
+  }));
+  pintar();
+}
+
+async function vistaLey(slug){
+  app.innerHTML = `<div class="tarjeta"><div class="spinner">Cargando la ley…</div></div>`;
+  let inst = null;
+  try{
+    const { data, error } = await db.from('tc_instruments')
+      .select('id,slug,name,short_name,type,level,jurisdiction,official_url,pdf_url,doc_url,reform_history_url,published_dof,last_reform_dof,status')
+      .eq('slug', slug).limit(1);
+    if(error) throw new Error(error.message);
+    inst = (data||[])[0];
+  }catch(e){
+    app.innerHTML = `<div class="tarjeta"><div class="errbox sans">No se pudo cargar la ley: ${esc(e.message)}</div><a class="btn sec sans" href="#/leyes">Volver al catálogo</a></div>`;
+    return;
+  }
+  if(!inst){
+    app.innerHTML = `<div class="tarjeta"><div class="miga sans">Inicio › <a href="#/leyes">Leyes</a></div><div class="errbox sans">No encontramos esa ley en el catálogo.</div><a class="btn sec sans" href="#/leyes">Volver al catálogo</a></div>`;
+    return;
+  }
+
+  app.innerHTML = `<div class="tarjeta">
+    <div class="miga sans">Inicio › <a href="#/leyes">Leyes</a> › ${esc(inst.short_name||inst.name)}</div>
+    <h1 class="art-tit">${esc(inst.name)}</h1>
+    <div class="sans" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 4px">
+      ${tipoBadge(inst)}
+      ${inst.level!=null?`<span class="tipo-badge">Nivel ${esc(inst.level)} de la pirámide</span>`:''}
+      ${inst.status&&inst.status!=='vigente'?`<span class="tipo-badge" style="border-color:var(--rojo);color:var(--rojo)">${esc(inst.status)}</span>`:''}
+    </div>
+    <p class="art-tema">${inst.published_dof?`Publicada en el DOF el ${esc(fmtFechaDia(inst.published_dof))}`:''}${inst.published_dof&&inst.last_reform_dof?' · ':''}${inst.last_reform_dof?`Última reforma DOF ${esc(fmtFechaDia(inst.last_reform_dof))}`:''}</p>
+    <div class="fuentebox sans">${ic('doc')} Fuente: <a href="${esc(inst.official_url||'https://www.diputados.gob.mx/LeyesBiblio/index.htm')}" target="_blank" rel="noopener">Cámara de Diputados, Leyes Biblio</a>${inst.pdf_url?` · <a href="${esc(inst.pdf_url)}" target="_blank" rel="noopener">PDF oficial</a>`:''}${inst.reform_history_url?` · <a href="${esc(inst.reform_history_url)}" target="_blank" rel="noopener">historial de reformas</a>`:''}</div>
+    <div id="ley-fundamento" class="sans"></div>
+    <h2 class="secc">Artículos</h2>
+    <div id="ley-arts" class="sans"><div class="spinner">Cargando artículos…</div></div>
+  </div>`;
+
+  // Fundamento constitucional: qué artículos de la CPEUM reglamenta esta ley
+  (async () => {
+    try{
+      const { data } = await db.from('tc_relations')
+        .select('to_article,method,evidence,cpeum:to_instrument!inner(slug)')
+        .eq('from_instrument', inst.id).eq('rel_type','reglamenta').eq('cpeum.slug','cpeum')
+        .limit(150);
+      const rels = data||[];
+      const zona = document.getElementById('ley-fundamento');
+      if(!rels.length || !zona) return;
+      const best = {};
+      rels.forEach(r=>{
+        const k = String(r.to_article||'').trim(); if(!k) return;
+        if(!best[k] || (METODO_PRIO[r.method]??9) < (METODO_PRIO[best[k].method]??9)) best[k]=r;
+      });
+      const filas = Object.keys(best).sort((a,b)=>(+a||999)-(+b||999)).map(k=>{
+        const r=best[k], m=METODO_LBL[r.method]||{lbl:r.method,cls:''}, num=+k;
+        const ev = String(r.evidence||'');
+        return `<div class="at-item">
+          ${num>=1&&num<=136?chipArt(num):`<span class="chip gris">Art. ${esc(k)}</span>`}
+          <span class="at-badge ${m.cls}"${ev?` title="${esc(ev)}"`:''}>${esc(m.lbl)}</span>
+          ${ev?`<span class="at-fecha" title="${esc(ev)}">${esc(ev.slice(0,160))}${ev.length>160?'…':''}</span>`:''}
+        </div>`;
+      }).join('');
+      zona.innerHTML = `<div class="relbox sans">
+        <h3>${ic('link')} Fundamento constitucional</h3>
+        <p class="at-intro">Esta norma reglamenta o desarrolla los siguientes artículos de la Constitución:</p>
+        ${filas}
+      </div>`;
+    }catch(e){}
+  })();
+
+  // Artículos de la ley (tc_law_articles; puede estar vacío mientras se ingiere)
+  (async () => {
+    let arts = [];
+    try{
+      const { data, error } = await db.from('tc_law_articles')
+        .select('art_key,texto,division')
+        .eq('instrument_id', inst.id).order('art_sort').limit(3000);
+      if(!error) arts = data||[];
+    }catch(e){}
+    const zona = document.getElementById('ley-arts');
+    if(!zona) return; // la vista cambió mientras cargaba
+    if(!arts.length){
+      zona.innerHTML = `<div class="pendiente sans"><b>El texto completo de esta ley aún no está ingerido</b> — consulta el PDF oficial.${inst.pdf_url?`<br><br><a class="btn" href="${esc(inst.pdf_url)}" target="_blank" rel="noopener">Leer el PDF oficial (Cámara de Diputados)</a>`:''}</div>`;
+      return;
+    }
+    const divisionTxt = d => { if(!d) return ''; try{ return Object.values(d).filter(x=>x&&typeof x==='string').join(' · '); }catch(e){ return ''; } };
+    zona.innerHTML = `<div class="leyes-filtros sans" style="margin:4px 0 10px">
+        <input id="la-q" type="search" placeholder="Buscar dentro de los ${arts.length} artículos…" autocomplete="off">
+      </div>
+      <div id="la-lista"></div>`;
+    const lista = document.getElementById('la-lista'), q = document.getElementById('la-q');
+    function pintarArts(){
+      const nq = normLey(q.value.trim());
+      const rows = nq ? arts.filter(a=>normLey(a.art_key).includes(nq)||normLey(a.texto).includes(nq)) : arts;
+      lista.innerHTML = rows.length
+        ? rows.map(a=>`<details class="ley-art">
+            <summary><span>Artículo ${esc(a.art_key)}</span>${divisionTxt(a.division)?`<span class="lm" style="font-weight:400">${esc(divisionTxt(a.division))}</span>`:''}</summary>
+            <div class="la-b">${String(a.texto||'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>`<p>${esc(l)}</p>`).join('')}</div>
+          </details>`).join('')
+        : `<div class="vacio">Ningún artículo coincide con tu búsqueda.</div>`;
+    }
+    q.addEventListener('input', pintarArts);
+    pintarArts();
+  })();
 }
 
 async function vistaArticulo(n){
