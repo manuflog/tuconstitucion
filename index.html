@@ -196,6 +196,24 @@ footer h4{color:#fff;margin-bottom:8px;font-size:.95rem}
 .chip.tema:hover{background:var(--oro);color:#3a2f14}
 .chip.gris{border-color:var(--linea);color:var(--gris)}
 
+/* ¿Cómo aterriza este artículo? — desarrollo normativo */
+.aterriza{border:1px solid var(--linea);border-radius:12px;margin:14px 0 6px;background:var(--blanco)}
+.aterriza>summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:.9rem;color:var(--verde-osc);list-style:none;display:flex;align-items:center;gap:8px}
+.aterriza>summary::-webkit-details-marker{display:none}
+.aterriza>summary:hover{color:var(--verde)}
+.aterriza .at-b{padding:0 14px 14px}
+.at-intro{font-size:.86rem;color:var(--gris);margin:2px 0 4px}
+.at-nivel{font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;color:var(--nota);font-weight:bold;margin:12px 0 2px;border-bottom:1px solid var(--linea);padding-bottom:3px}
+.at-item{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;padding:7px 0;border-bottom:1px dashed var(--linea);font-size:.88rem}
+.at-item:last-child{border-bottom:none}
+.at-nom{font-weight:600}
+.at-fecha{font-size:.78rem;color:var(--gris)}
+.at-badge{display:inline-block;font-size:.68rem;padding:1px 8px;border-radius:10px;border:1px solid var(--linea);color:var(--gris);text-transform:uppercase;letter-spacing:.4px;background:var(--blanco)}
+.at-badge.curated{border-color:var(--verde);color:var(--verde)}
+.at-badge.declared{border-color:var(--edu);color:var(--edu)}
+.at-badge.parsed{border-color:var(--oro);color:var(--oro)}
+.at-badge.ai{border-color:var(--idea);color:var(--idea-osc)}
+
 /* Capa educativa — tarjeta "en pocas palabras" */
 .explica{border:1px solid #d6e6f2;border-radius:12px;padding:0;margin:14px 0 6px;overflow:hidden;background:var(--blanco)}
 .explica .ex-h{background:var(--edu-bg);padding:10px 16px;font-size:.82rem;font-weight:bold;color:var(--edu-osc);display:flex;align-items:center;gap:8px;border-bottom:1px solid #dfeaf4}
@@ -910,6 +928,84 @@ function reformasHTML(A){
   </details>`;
 }
 
+/* ---------- ¿Cómo aterriza este artículo? (desarrollo normativo) ----------
+   Muestra, por nivel de la pirámide normativa, las leyes y normas que
+   desarrollan cada artículo constitucional (tc_relations → tc_instruments). */
+const NIVEL_LBL = {
+  0:'Constitución y bloque constitucional',
+  1:'Tratados internacionales',
+  2:'Leyes generales y nacionales',
+  3:'Leyes federales y códigos',
+  4:'Reglamentos federales y normas',
+  5:'Constituciones estatales',
+  6:'Leyes y códigos estatales',
+  7:'Reglamentos estatales',
+  8:'Bandos y reglamentos municipales'
+};
+const METODO_LBL = {
+  declared:{lbl:'declarada en el título de la ley', cls:'declared'},
+  parsed:{lbl:'citada en el texto', cls:'parsed'},
+  curated:{lbl:'verificada', cls:'curated'},
+  ai_suggested:{lbl:'sugerida por IA (sin verificar)', cls:'ai'}
+};
+const METODO_PRIO = {curated:0, declared:1, parsed:2, ai_suggested:3};
+const fmtFechaDia = s => { // 'AAAA-MM-DD' sin desfase de zona horaria
+  const m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})/); if(!m) return String(s);
+  const meses=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return `${+m[3]} ${meses[+m[2]-1]} ${m[1]}`;
+};
+const _aterrizaCache = {};
+function cargarAterriza(n){
+  if(_aterrizaCache[n]) return _aterrizaCache[n];
+  _aterrizaCache[n] = (async () => {
+    try{
+      const { data, error } = await db.from('tc_relations')
+        .select('rel_type,method,evidence,from_article,inst:from_instrument(slug,name,short_name,type,level,pdf_url,reform_history_url,last_reform_dof,official_url),cpeum:to_instrument!inner(slug)')
+        .eq('cpeum.slug','cpeum')
+        .eq('to_article', String(n))
+        .limit(300);
+      if(error) return [];
+      return (data||[]).filter(r=>r.inst && r.inst.slug!=='cpeum');
+    }catch(e){ return []; }
+  })();
+  return _aterrizaCache[n];
+}
+async function pintarAterriza(n){
+  const rels = await cargarAterriza(n);
+  const zona = document.getElementById('aterriza-zona');
+  if(!zona || zona.dataset.art!==String(n)) return; // la vista cambió mientras cargaba
+  if(!rels.length){ zona.innerHTML=''; return; }    // sin relaciones: no se pinta nada
+  // agrupa por nivel de la pirámide; una sola entrada por instrumento (mejor método)
+  const grupos = {};
+  rels.forEach(r=>{
+    const lv = (r.inst.level==null) ? 99 : +r.inst.level;
+    const g = (grupos[lv] = grupos[lv] || {});
+    const k = r.inst.slug || r.inst.name || '';
+    const prev = g[k];
+    if(!prev || (METODO_PRIO[r.method]??9) < (METODO_PRIO[prev.method]??9)) g[k]=r;
+  });
+  const cuerpo = Object.keys(grupos).sort((a,b)=>a-b).map(lv=>{
+    const items = Object.values(grupos[lv]).sort((a,b)=>
+      (a.inst.short_name||a.inst.name||'').localeCompare(b.inst.short_name||b.inst.name||'','es'));
+    return `<div class="at-nivel">${esc(NIVEL_LBL[lv]||'Otras normas')}</div>` + items.map(r=>{
+      const i=r.inst, nom=i.short_name||i.name||'Norma', url=i.reform_history_url||i.official_url||i.pdf_url||'';
+      const m=METODO_LBL[r.method]||{lbl:r.method,cls:''};
+      return `<div class="at-item">
+        <span class="at-nom">${url?`<a href="${esc(url)}" target="_blank" rel="noopener">${esc(nom)}</a>`:esc(nom)}</span>
+        ${i.last_reform_dof?`<span class="at-fecha">Última reforma: ${esc(fmtFechaDia(i.last_reform_dof))}</span>`:''}
+        <span class="at-badge ${m.cls}"${r.evidence?` title="${esc(r.evidence)}"`:''}>${esc(m.lbl)}</span>
+      </div>`;
+    }).join('');
+  }).join('');
+  zona.innerHTML = `<details class="aterriza sans">
+    <summary>${ic('config')} ¿Cómo aterriza este artículo? <span class="badge">${Object.values(grupos).reduce((s,g)=>s+Object.keys(g).length,0)}</span></summary>
+    <div class="at-b">
+      <p class="at-intro">Este artículo se desarrolla en las siguientes normas:</p>
+      ${cuerpo}
+    </div>
+  </details>`;
+}
+
 async function vistaArticulo(n){
   if(n<1||n>136){ location.hash='#/constitucion'; return; }
   const cap = capDe(n);
@@ -933,6 +1029,7 @@ async function vistaArticulo(n){
         <div id="preg-hist"></div>
       </div>
     </details>`:''}
+    <div id="aterriza-zona" class="sans" data-art="${n}"></div>
     <div class="tabs sans">
       <button class="act" data-tab="texto">Texto vigente</button>
       <button data-tab="props">Debate e ideas <span class="badge" id="nprops">…</span></button>
@@ -954,6 +1051,7 @@ async function vistaArticulo(n){
   wireSidebar();
   wireTerminos();
   wirePregunta(n);
+  pintarAterriza(n);   // "¿Cómo aterriza este artículo?" (carga perezosa, con caché)
 
   document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('act'));
