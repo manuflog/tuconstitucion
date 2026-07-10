@@ -263,13 +263,15 @@ def process_law(base, inst, dry=False, force=False):
 
     # hash-diff contra lo existente
     r = requests.get(f"{base}/rest/v1/tc_law_articles?instrument_id=eq.{iid}"
-                     f"&select=art_key,hash", headers=sb_headers(), timeout=60)
+                     f"&select=art_key,hash,art_sort", headers=sb_headers(), timeout=60)
     r.raise_for_status()
-    existing = {row["art_key"]: row["hash"] for row in r.json()}
+    existing = {row["art_key"]: (row["hash"], row["art_sort"]) for row in r.json()}
     payload = []
     for a in arts:
         h = _hash(a["texto"])
-        if existing.get(a["art_key"]) == h:
+        # el art_sort también cuenta: si el orden cambió (p. ej. artículos
+        # nuevos intercalados), hay que re-escribir aunque el texto sea igual
+        if existing.get(a["art_key"]) == (h, a["art_sort"]):
             continue
         payload.append({"instrument_id": iid, "art_key": a["art_key"],
                         "art_sort": a["art_sort"], "division": a["division"],
