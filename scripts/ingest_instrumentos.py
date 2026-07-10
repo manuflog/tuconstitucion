@@ -152,8 +152,19 @@ def declared_relations(rows):
 
 
 def parse_abrogadas(html: str):
-    """→ set de slugs presentes en la página oficial de abrogadas."""
-    return {m.lower() for m in RE_SLUG.findall(html)}
+    """→ set de slugs de leyes abrogadas.
+
+    Solo filas de tabla con enlace a PDF (los menús de navegación de la
+    página enlazan ref/cpeum.htm y otros: NO son leyes abrogadas)."""
+    slugs = set()
+    for chunk in RE_ROW_SPLIT.split(html):
+        if 'href="pdf' not in chunk and 'href="abro/' not in chunk:
+            continue
+        m = RE_SLUG.search(chunk)
+        if m:
+            slugs.add(m.group(1).lower())
+    slugs.discard("cpeum")  # la Constitución jamás se marca abrogada
+    return slugs
 
 
 # ------------------------- Supabase -------------------------
@@ -258,6 +269,11 @@ def selftest():
     r5 = declared_relations([{"slug": "lr5",
         "name": "LEY Reglamentaria del Artículo 5o. Constitucional, relativo al ejercicio de las profesiones"}])
     assert {(x["from_slug"], x["to_article"]) for x in r5} == {("lr5", "5")}
+    # abrogadas: los menús enlazan ref/cpeum.htm — no debe marcarse
+    ab = parse_abrogadas('<a href="ref/cpeum.htm">CPEUM</a><tr><td>'
+                         '<a href="ref/lvieja.htm">LEY vieja</a>'
+                         '<a href="pdf_abro/LVieja_abro.pdf">pdf</a></td></tr>')
+    assert ab == {"lvieja"}, ab
     print("selftest OK")
 
 
